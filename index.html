@@ -193,9 +193,9 @@
       
           <div id="content">
 
-<div id="outline-container-org8616ab6" class="outline-2">
-<h2 id="org8616ab6">准备工作</h2>
-<div class="outline-text-2" id="text-org8616ab6">
+<div id="outline-container-org1e46646" class="outline-2">
+<h2 id="org1e46646">准备工作</h2>
+<div class="outline-text-2" id="text-org1e46646">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -222,17 +222,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-orgb3d4495" class="outline-2">
-<h2 id="orgb3d4495">配置的详细过程</h2>
-<div class="outline-text-2" id="text-orgb3d4495">
+<div id="outline-container-org0c02f2d" class="outline-2">
+<h2 id="org0c02f2d">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org0c02f2d">
 </div>
-<div id="outline-container-org27a040f" class="outline-3">
-<h3 id="org27a040f">配置SSL证书</h3>
-<div class="outline-text-3" id="text-org27a040f">
+<div id="outline-container-orgc487287" class="outline-3">
+<h3 id="orgc487287">配置SSL证书</h3>
+<div class="outline-text-3" id="text-orgc487287">
 </div>
-<div id="outline-container-orgacde447" class="outline-4">
-<h4 id="orgacde447">生成私有证书</h4>
-<div class="outline-text-4" id="text-orgacde447">
+<div id="outline-container-orgc086d48" class="outline-4">
+<h4 id="orgc086d48">生成私有证书</h4>
+<div class="outline-text-4" id="text-orgc086d48">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -265,9 +265,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org812cca9" class="outline-3">
-<h3 id="org812cca9">配置Postfix</h3>
-<div class="outline-text-3" id="text-org812cca9">
+<div id="outline-container-org787bf44" class="outline-3">
+<h3 id="org787bf44">配置Postfix</h3>
+<div class="outline-text-3" id="text-org787bf44">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -321,9 +321,9 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org4224586" class="outline-3">
-<h3 id="org4224586">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org4224586">
+<div id="outline-container-org6e60b10" class="outline-3">
+<h3 id="org6e60b10">配置Dovecot</h3>
+<div class="outline-text-3" id="text-org6e60b10">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>=imap</code> 和 <code>pop3</code>
@@ -347,9 +347,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-orgedd4cc4" class="outline-3">
-<h3 id="orgedd4cc4">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-orgedd4cc4">
+<div id="outline-container-org8d8ba9e" class="outline-3">
+<h3 id="org8d8ba9e">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-org8d8ba9e">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -379,9 +379,9 @@ sudo systemctl enable dovecot        i
 </div>
 </div>
 
-<div id="outline-container-orgca07c4f" class="outline-3">
-<h3 id="orgca07c4f">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-orgca07c4f">
+<div id="outline-container-orgbe6efea" class="outline-3">
+<h3 id="orgbe6efea">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgbe6efea">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -439,9 +439,9 @@ sudo systemctl enable dovecot        i
 </div>
 </div>
 
-<div id="outline-container-org373ccfb" class="outline-2">
-<h2 id="org373ccfb">测试功能</h2>
-<div class="outline-text-2" id="text-org373ccfb">
+<div id="outline-container-org22edc53" class="outline-2">
+<h2 id="org22edc53">测试功能</h2>
+<div class="outline-text-2" id="text-org22edc53">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
