@@ -29,11 +29,9 @@
 <meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
 <meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/mastercf.png">
 <meta property="article:published_time" content="2020-03-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-15T13:44:14.020Z">
+<meta property="article:modified_time" content="2020-03-15T14:24:58.486Z">
 <meta property="article:author" content="王翔">
-<meta property="article:tag" content="postfix">
-<meta property="article:tag" content="dovecot">
-<meta property="article:tag" content="mail">
+<meta property="article:tag" content="postfix dovecot mail">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
 
@@ -187,7 +185,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-03-15 08:00:00 / Modified: 21:44:14" itemprop="dateCreated datePublished" datetime="2020-03-15T08:00:00+08:00">2020-03-15</time>
+              <time title="Created: 2020-03-15 08:00:00 / Modified: 22:24:58" itemprop="dateCreated datePublished" datetime="2020-03-15T08:00:00+08:00">2020-03-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -195,7 +193,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
                 </span>
             </span>
 
@@ -212,9 +210,9 @@
       
         <div id="content">
 
-<div id="outline-container-orgb663129" class="outline-2">
-<h2 id="orgb663129">准备工作</h2>
-<div class="outline-text-2" id="text-orgb663129">
+<div id="outline-container-org959b2d7" class="outline-2">
+<h2 id="org959b2d7">准备工作</h2>
+<div class="outline-text-2" id="text-org959b2d7">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -241,17 +239,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org092fe2e" class="outline-2">
-<h2 id="org092fe2e">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org092fe2e">
+<div id="outline-container-org916dbb1" class="outline-2">
+<h2 id="org916dbb1">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org916dbb1">
 </div>
-<div id="outline-container-orgbd3b054" class="outline-3">
-<h3 id="orgbd3b054">配置SSL证书</h3>
-<div class="outline-text-3" id="text-orgbd3b054">
+<div id="outline-container-org66b4fb3" class="outline-3">
+<h3 id="org66b4fb3">配置SSL证书</h3>
+<div class="outline-text-3" id="text-org66b4fb3">
 </div>
-<div id="outline-container-orgec39211" class="outline-4">
-<h4 id="orgec39211">生成私有证书</h4>
-<div class="outline-text-4" id="text-orgec39211">
+<div id="outline-container-org63a5372" class="outline-4">
+<h4 id="org63a5372">生成私有证书</h4>
+<div class="outline-text-4" id="text-org63a5372">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -284,9 +282,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org576c82c" class="outline-3">
-<h3 id="org576c82c">配置Postfix</h3>
-<div class="outline-text-3" id="text-org576c82c">
+<div id="outline-container-org74453df" class="outline-3">
+<h3 id="org74453df">配置Postfix</h3>
+<div class="outline-text-3" id="text-org74453df">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -340,9 +338,9 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org90ba273" class="outline-3">
-<h3 id="org90ba273">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org90ba273">
+<div id="outline-container-orgecfcf92" class="outline-3">
+<h3 id="orgecfcf92">配置Dovecot</h3>
+<div class="outline-text-3" id="text-orgecfcf92">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>=imap</code> 和 <code>pop3</code>
@@ -366,9 +364,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-org6a9e528" class="outline-3">
-<h3 id="org6a9e528">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-org6a9e528">
+<div id="outline-container-org595beb8" class="outline-3">
+<h3 id="org595beb8">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-org595beb8">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -398,9 +396,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org9738685" class="outline-3">
-<h3 id="org9738685">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-org9738685">
+<div id="outline-container-orgd758681" class="outline-3">
+<h3 id="orgd758681">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgd758681">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -458,9 +456,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-orgb7c47bf" class="outline-2">
-<h2 id="orgb7c47bf">测试功能</h2>
-<div class="outline-text-2" id="text-orgb7c47bf">
+<div id="outline-container-orgfbecfa0" class="outline-2">
+<h2 id="orgfbecfa0">测试功能</h2>
+<div class="outline-text-2" id="text-orgfbecfa0">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -585,9 +583,7 @@ tag OK List completed (0.001 + 0.000 secs).
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/postfix/" rel="tag"># postfix</a>
-              <a href="/tags/dovecot/" rel="tag"># dovecot</a>
-              <a href="/tags/mail/" rel="tag"># mail</a>
+              <a href="/tags/postfix-dovecot-mail/" rel="tag"># postfix dovecot mail</a>
           </div>
 
         
@@ -652,7 +648,7 @@ tag OK List completed (0.001 + 0.000 secs).
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgb663129"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org092fe2e"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orgbd3b054"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#orgec39211"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org576c82c"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org90ba273"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org6a9e528"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org9738685"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgb7c47bf"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org959b2d7"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org916dbb1"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org66b4fb3"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#org63a5372"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org74453df"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgecfcf92"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org595beb8"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgd758681"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgfbecfa0"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -675,7 +671,7 @@ tag OK List completed (0.001 + 0.000 secs).
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

@@ -5,9 +5,9 @@
     <url>/2020/03/15/postfix-dovecot-config/</url>
     <content><![CDATA[<div id="content">
 
-<div id="outline-container-orgb663129" class="outline-2">
-<h2 id="orgb663129">准备工作</h2>
-<div class="outline-text-2" id="text-orgb663129">
+<div id="outline-container-org959b2d7" class="outline-2">
+<h2 id="org959b2d7">准备工作</h2>
+<div class="outline-text-2" id="text-org959b2d7">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -34,17 +34,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org092fe2e" class="outline-2">
-<h2 id="org092fe2e">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org092fe2e">
+<div id="outline-container-org916dbb1" class="outline-2">
+<h2 id="org916dbb1">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org916dbb1">
 </div>
-<div id="outline-container-orgbd3b054" class="outline-3">
-<h3 id="orgbd3b054">配置SSL证书</h3>
-<div class="outline-text-3" id="text-orgbd3b054">
+<div id="outline-container-org66b4fb3" class="outline-3">
+<h3 id="org66b4fb3">配置SSL证书</h3>
+<div class="outline-text-3" id="text-org66b4fb3">
 </div>
-<div id="outline-container-orgec39211" class="outline-4">
-<h4 id="orgec39211">生成私有证书</h4>
-<div class="outline-text-4" id="text-orgec39211">
+<div id="outline-container-org63a5372" class="outline-4">
+<h4 id="org63a5372">生成私有证书</h4>
+<div class="outline-text-4" id="text-org63a5372">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -77,9 +77,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org576c82c" class="outline-3">
-<h3 id="org576c82c">配置Postfix</h3>
-<div class="outline-text-3" id="text-org576c82c">
+<div id="outline-container-org74453df" class="outline-3">
+<h3 id="org74453df">配置Postfix</h3>
+<div class="outline-text-3" id="text-org74453df">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -133,9 +133,9 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org90ba273" class="outline-3">
-<h3 id="org90ba273">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org90ba273">
+<div id="outline-container-orgecfcf92" class="outline-3">
+<h3 id="orgecfcf92">配置Dovecot</h3>
+<div class="outline-text-3" id="text-orgecfcf92">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>=imap</code> 和 <code>pop3</code>
@@ -159,9 +159,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-org6a9e528" class="outline-3">
-<h3 id="org6a9e528">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-org6a9e528">
+<div id="outline-container-org595beb8" class="outline-3">
+<h3 id="org595beb8">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-org595beb8">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -191,9 +191,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org9738685" class="outline-3">
-<h3 id="org9738685">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-org9738685">
+<div id="outline-container-orgd758681" class="outline-3">
+<h3 id="orgd758681">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgd758681">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -251,9 +251,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-orgb7c47bf" class="outline-2">
-<h2 id="orgb7c47bf">测试功能</h2>
-<div class="outline-text-2" id="text-orgb7c47bf">
+<div id="outline-container-orgfbecfa0" class="outline-2">
+<h2 id="orgfbecfa0">测试功能</h2>
+<div class="outline-text-2" id="text-orgfbecfa0">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -371,12 +371,10 @@ tag OK List completed (0.001 + 0.000 secs).
           });
       </script>]]></content>
       <categories>
-        <category>Linux</category>
+        <category>linux</category>
       </categories>
       <tags>
-        <tag>postfix</tag>
-        <tag>dovecot</tag>
-        <tag>mail</tag>
+        <tag>postfix dovecot mail</tag>
       </tags>
   </entry>
 </search>
