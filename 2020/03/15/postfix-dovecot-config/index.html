@@ -263,9 +263,9 @@
       
         <div id="content">
 
-<div id="outline-container-org7d84d17" class="outline-2">
-<h2 id="org7d84d17">准备工作</h2>
-<div class="outline-text-2" id="text-org7d84d17">
+<div id="outline-container-orgd8f94ba" class="outline-2">
+<h2 id="orgd8f94ba">准备工作</h2>
+<div class="outline-text-2" id="text-orgd8f94ba">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -292,17 +292,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org8478ec4" class="outline-2">
-<h2 id="org8478ec4">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org8478ec4">
+<div id="outline-container-orgbed19b1" class="outline-2">
+<h2 id="orgbed19b1">配置的详细过程</h2>
+<div class="outline-text-2" id="text-orgbed19b1">
 </div>
-<div id="outline-container-org3e8670a" class="outline-3">
-<h3 id="org3e8670a">配置SSL证书</h3>
-<div class="outline-text-3" id="text-org3e8670a">
+<div id="outline-container-org1a88c2f" class="outline-3">
+<h3 id="org1a88c2f">配置SSL证书</h3>
+<div class="outline-text-3" id="text-org1a88c2f">
 </div>
-<div id="outline-container-org26e9774" class="outline-4">
-<h4 id="org26e9774">生成私有证书</h4>
-<div class="outline-text-4" id="text-org26e9774">
+<div id="outline-container-org2aec52d" class="outline-4">
+<h4 id="org2aec52d">生成私有证书</h4>
+<div class="outline-text-4" id="text-org2aec52d">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -335,9 +335,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org849bcae" class="outline-3">
-<h3 id="org849bcae">配置Postfix</h3>
-<div class="outline-text-3" id="text-org849bcae">
+<div id="outline-container-orgd5a9808" class="outline-3">
+<h3 id="orgd5a9808">配置Postfix</h3>
+<div class="outline-text-3" id="text-orgd5a9808">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -391,9 +391,9 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org9e094eb" class="outline-3">
-<h3 id="org9e094eb">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org9e094eb">
+<div id="outline-container-orgacb1ba2" class="outline-3">
+<h3 id="orgacb1ba2">配置Dovecot</h3>
+<div class="outline-text-3" id="text-orgacb1ba2">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
@@ -417,9 +417,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-org7ce4638" class="outline-3">
-<h3 id="org7ce4638">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-org7ce4638">
+<div id="outline-container-org845f00d" class="outline-3">
+<h3 id="org845f00d">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-org845f00d">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -449,9 +449,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-orgdfb3b5e" class="outline-3">
-<h3 id="orgdfb3b5e">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-orgdfb3b5e">
+<div id="outline-container-orgde6adea" class="outline-3">
+<h3 id="orgde6adea">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgde6adea">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -509,9 +509,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-orgdb32afe" class="outline-2">
-<h2 id="orgdb32afe">测试功能</h2>
-<div class="outline-text-2" id="text-orgdb32afe">
+<div id="outline-container-org81d5b9a" class="outline-2">
+<h2 id="org81d5b9a">测试功能</h2>
+<div class="outline-text-2" id="text-org81d5b9a">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -721,7 +721,7 @@ tag OK List completed (0.001 + 0.000 secs).
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org7d84d17"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org8478ec4"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org3e8670a"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#org26e9774"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org849bcae"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org9e094eb"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org7ce4638"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgdfb3b5e"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgdb32afe"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd8f94ba"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgbed19b1"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org1a88c2f"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#org2aec52d"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgd5a9808"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgacb1ba2"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org845f00d"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgde6adea"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org81d5b9a"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
