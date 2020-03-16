@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
 <meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/mastercf.png">
 <meta property="article:published_time" content="2020-03-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-15T14:31:47.166Z">
+<meta property="article:modified_time" content="2020-03-16T05:23:08.112Z">
 <meta property="article:author" content="王翔">
 <meta property="article:tag" content="postfix">
 <meta property="article:tag" content="dovecot">
@@ -188,10 +188,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-15 08:00:00 / Modified: 22:31:47" itemprop="dateCreated datePublished" datetime="2020-03-15T08:00:00+08:00">2020-03-15</time>
+              <time title="Created: 2020-03-15 08:00:00" itemprop="dateCreated datePublished" datetime="2020-03-15T08:00:00+08:00">2020-03-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-16 13:23:08" itemprop="dateModified" datetime="2020-03-16T13:23:08+08:00">2020-03-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -236,14 +242,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span></span>
+              <span>5.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>NaN:aN</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -257,9 +263,9 @@
       
         <div id="content">
 
-<div id="outline-container-org0b2ec42" class="outline-2">
-<h2 id="org0b2ec42">准备工作</h2>
-<div class="outline-text-2" id="text-org0b2ec42">
+<div id="outline-container-org7d84d17" class="outline-2">
+<h2 id="org7d84d17">准备工作</h2>
+<div class="outline-text-2" id="text-org7d84d17">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -286,17 +292,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org267395c" class="outline-2">
-<h2 id="org267395c">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org267395c">
+<div id="outline-container-org8478ec4" class="outline-2">
+<h2 id="org8478ec4">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org8478ec4">
 </div>
-<div id="outline-container-org59c58ca" class="outline-3">
-<h3 id="org59c58ca">配置SSL证书</h3>
-<div class="outline-text-3" id="text-org59c58ca">
+<div id="outline-container-org3e8670a" class="outline-3">
+<h3 id="org3e8670a">配置SSL证书</h3>
+<div class="outline-text-3" id="text-org3e8670a">
 </div>
-<div id="outline-container-orgd2b9734" class="outline-4">
-<h4 id="orgd2b9734">生成私有证书</h4>
-<div class="outline-text-4" id="text-orgd2b9734">
+<div id="outline-container-org26e9774" class="outline-4">
+<h4 id="org26e9774">生成私有证书</h4>
+<div class="outline-text-4" id="text-org26e9774">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -329,9 +335,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org8489de0" class="outline-3">
-<h3 id="org8489de0">配置Postfix</h3>
-<div class="outline-text-3" id="text-org8489de0">
+<div id="outline-container-org849bcae" class="outline-3">
+<h3 id="org849bcae">配置Postfix</h3>
+<div class="outline-text-3" id="text-org849bcae">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -385,12 +391,12 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org1ac6a1f" class="outline-3">
-<h3 id="org1ac6a1f">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org1ac6a1f">
+<div id="outline-container-org9e094eb" class="outline-3">
+<h3 id="org9e094eb">配置Dovecot</h3>
+<div class="outline-text-3" id="text-org9e094eb">
 <ul class="org-ul">
 <li><p>
-编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>=imap</code> 和 <code>pop3</code>
+编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
 </p>
 <pre class="example">protocols = imap pop3
 </pre></li>
@@ -411,9 +417,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-org7716c7b" class="outline-3">
-<h3 id="org7716c7b">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-org7716c7b">
+<div id="outline-container-org7ce4638" class="outline-3">
+<h3 id="org7ce4638">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-org7ce4638">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -443,9 +449,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org28237a0" class="outline-3">
-<h3 id="org28237a0">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-org28237a0">
+<div id="outline-container-orgdfb3b5e" class="outline-3">
+<h3 id="orgdfb3b5e">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgdfb3b5e">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -503,9 +509,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org908c07b" class="outline-2">
-<h2 id="org908c07b">测试功能</h2>
-<div class="outline-text-2" id="text-org908c07b">
+<div id="outline-container-orgdb32afe" class="outline-2">
+<h2 id="orgdb32afe">测试功能</h2>
+<div class="outline-text-2" id="text-orgdb32afe">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -715,7 +721,7 @@ tag OK List completed (0.001 + 0.000 secs).
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org0b2ec42"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org267395c"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org59c58ca"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#orgd2b9734"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org8489de0"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org1ac6a1f"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org7716c7b"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org28237a0"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org908c07b"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org7d84d17"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org8478ec4"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org3e8670a"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#org26e9774"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org849bcae"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org9e094eb"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org7ce4638"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgdfb3b5e"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgdb32afe"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -789,12 +795,12 @@ tag OK List completed (0.001 + 0.000 secs).
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">NaNm</span>
+    <span title="Symbols count total">5k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">NaN:aN</span>
+    <span title="Reading time total">5 mins.</span>
 </div>
 
         
