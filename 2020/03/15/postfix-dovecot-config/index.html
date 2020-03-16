@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"shwangdev.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"blog.machineheart.tech","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="准备工作   首先你需要一个 Linux 的 VPS ，以及一个可以用的域名。 VPS 的操作系统可以选 Ubuntu 或者 centos 等主流的 Linux 系统。 同时，删除原来系统里面的 sentmail 相关的 package 。 在你的域名供应商的平台上配置好你的域名解析。 一般情况下，需要配置3种域名解析类型， 分别是 A, MX, TXT 下面是我的配置, 我用的是阿里云的域">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于postfix和dovecot搭建个人邮件服务器">
-<meta property="og:url" content="http://shwangdev.github.io/2020/03/15/postfix-dovecot-config/index.html">
+<meta property="og:url" content="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/index.html">
 <meta property="og:site_name" content="肖恩&#96;s Blog">
 <meta property="og:description" content="准备工作   首先你需要一个 Linux 的 VPS ，以及一个可以用的域名。 VPS 的操作系统可以选 Ubuntu 或者 centos 等主流的 Linux 系统。 同时，删除原来系统里面的 sentmail 相关的 package 。 在你的域名供应商的平台上配置好你的域名解析。 一般情况下，需要配置3种域名解析类型， 分别是 A, MX, TXT 下面是我的配置, 我用的是阿里云的域">
 <meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
@@ -37,7 +37,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
 
-<link rel="canonical" href="http://shwangdev.github.io/2020/03/15/postfix-dovecot-config/">
+<link rel="canonical" href="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/">
 
 
 <script id="page-configurations">
@@ -166,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://shwangdev.github.io/2020/03/15/postfix-dovecot-config/">
+    <link itemprop="mainEntityOfPage" href="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/emacs.png">
@@ -642,7 +642,7 @@ tag OK List completed (0.001 + 0.000 secs).
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="http://shwangdev.github.io/2020/03/15/postfix-dovecot-config/" title="基于postfix和dovecot搭建个人邮件服务器">http://shwangdev.github.io/2020/03/15/postfix-dovecot-config/</a>
+    <a href="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/" title="基于postfix和dovecot搭建个人邮件服务器">https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
