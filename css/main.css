@@ -419,19 +419,10 @@ td {
 .copy-btn {
   color: #333;
   cursor: pointer;
-  display: inline-block;
-  font-weight: bold;
   line-height: 1.6;
   opacity: 0;
-  outline: 0;
   padding: 2px 6px;
   position: absolute;
-  vertical-align: middle;
-  white-space: nowrap;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
   transition-delay: 0s;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
@@ -480,7 +471,7 @@ code {
   padding: 0;
 }
 .highlight figcaption {
-  background: #eee;
+  background: #002b36;
   color: #93a1a1;
   display: flex;
   font-size: 0.875em;
@@ -1048,12 +1039,10 @@ pre .javascript .function {
   color: var(--brand-hover-color);
 }
 .site-title {
-  display: inline-block;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 1.375em;
   font-weight: normal;
-  line-height: 1.5;
-  vertical-align: top;
+  margin: 0;
 }
 .site-subtitle {
   color: #ddd;
@@ -1298,7 +1287,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #d4ffd4;
+  background: #e8fff7;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1518,6 +1507,22 @@ pre .javascript .function {
     width: 73%;
   }
 }
+.languages {
+  display: inline-block;
+  font-size: 1.125em;
+  position: relative;
+}
+.languages .lang-select-label span {
+  margin: 0 0.5em;
+}
+.languages .lang-select {
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
 .with-love {
   color: #808080;
   display: inline-block;
@@ -1694,16 +1699,6 @@ pre .javascript .function {
     opacity: 0.8;
   }
 }
-.reading-progress-bar {
-  background: #37c6c0;
-  display: block;
-  height: 3px;
-  left: 0;
-  position: fixed;
-  width: 0;
-  z-index: 1500;
-  top: 0;
-}
 .post-body {
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   overflow-wrap: break-word;
@@ -1778,6 +1773,8 @@ pre .javascript .function {
   width: 10px;
 }
 .posts-collapse .collection-year {
+  font-size: 1.5em;
+  font-weight: bold;
   margin: 60px 0;
   position: relative;
 }
@@ -1794,7 +1791,6 @@ pre .javascript .function {
   width: 8px;
 }
 .posts-collapse .collection-header {
-  display: inline-block;
   margin: 0 0 0 20px;
 }
 .posts-collapse .collection-header small {
@@ -1840,8 +1836,6 @@ pre .javascript .function {
 }
 .posts-collapse .post-title {
   display: inline;
-  font-size: 1em;
-  font-weight: normal;
 }
 .posts-collapse .post-title a,
 .posts-collapse .post-title span.exturl {
@@ -1971,6 +1965,7 @@ pre .javascript .function {
   font-size: 1.125em;
 }
 .posts-expand .post-title {
+  font-size: 1.5em;
   font-weight: normal;
   margin: initial;
   text-align: center;
