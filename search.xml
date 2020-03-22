@@ -1,13 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Python Pandas库如何优雅的与数据库交互</title>
+    <url>/2020/03/18/python-pandas-pgsql-interaction/</url>
+    <content><![CDATA[<div id="content">
+
+<div id="outline-container-org992dc0c" class="outline-2">
+<h2 id="org992dc0c">问题描述</h2>
+<div class="outline-text-2" id="text-org992dc0c">
+<p>
+最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
+</p>
+<ul class="org-ul">
+<li>从 <code>google</code> <code>bigquery</code> 大叔据平台将计算和聚合过的每小时结果集存在 <code>pandas</code> 的 <code>dataframe</code> 中。</li>
+<li><code>pandas</code> 的数据与 <code>postgresql</code> 数据库同步, 将结果集中有些字段为空的部分从 <code>postgresq</code> 中再回填给 <code>pandas</code> 的 <code>dataframe</code> 中。</li>
+<li>合并之后的结果在更新入 <code>postgresq</code>, 同时写入 <code>hive</code> 表中便于后期用 <code>presto</code> 做长查询。</li>
+</ul>
+
+<p>
+本来这套逻辑似乎更适用于 <code>spark</code> <code>map reduce</code> 来做，但是由于 <code>bigquery</code> 的计算分布在几十个 <code>gcp project</code> 里面。
+<code>spark</code> 调用 <code>bigquery</code> 的话配置权限很麻烦，同时结果集每小时的大小也只在三万到十万级别。 
+计算任务是在 <code>bigquery</code> 中完成, 所以这时候调用 <code>spark</code> 似乎有点重了。所以决定使用 <code>python pandas</code>  配合别的大数据主件。
+</p>
+
+<p>
+<code>bigquer</code> 每次会计算历史10几个小时的聚合结果集，按照每小时3-10万的量算下来，最多一次合并 <code>postgresq</code> 的量级在百万以内。
+这个量级在合并的时候从 <code>pgsql</code> 拉数据下来，再在内存中用 <code>pandas</code> 做 <code>join</code> 明显不是明智的选择。 
+从 <code>pgsql</code> 中 <code>select</code> 百万记录下来 <code>pandas</code> <code>join</code> 完之后再上传 <code>pqsql</code> ，再 <code>update</code> 无疑增加了计算的复杂度。
+所以我的选择是: <b>按小时将 <code>pandas</code> <code>dataframe</code> 上传到 <code>pgsql</code> 临时表， 直接在数据库中做 <code>join</code> 并 <code>update</code> <code>pgsql</code> 中的记录</b> 。
+</p>
+
+<p>
+因此我们需要实现的就是如何优雅的把 <code>pandas dataframe</code> 上传到 <code>pgsql</code> 的临时表，并提供接口操作临时表和已有的表做运算。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org465d3e0" class="outline-2">
+<h2 id="org465d3e0">解决方案</h2>
+<div class="outline-text-2" id="text-org465d3e0">
+<p>
+虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
+但是又不想用很重的库如 <code>sqlalchemy</code> 等支持 <code>ORM</code> 的库，觉得还是对程序员不友好。而且要写很多手脚架来适配。
+</p>
+
+<p>
+所以这里推荐我常用的数据库连接库 <a href="https://github.com/kennethreitz-archive/records" target="_blank" rel="noopener">records</a>
+</p>
+
+
+<div class="figure">
+<p><img src="http://q78cpsmed.bkt.clouddn.com/python-pandas-pgsql-interaction/records.jpg">
+</p>
+</div>
+
+<ul class="org-ul">
+<li><p>
+动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">infer_pd_schema</span>(df):
+    <span style="font-style: italic;">'''infer pandas dataframe schema</span>
+<span style="font-style: italic;">    '''</span>
+    <span style="font-weight: bold; font-style: italic;">schema</span> = []
+    <span style="font-weight: bold; font-style: italic;">type_map</span> = {
+        <span style="font-style: italic;">'int64'</span>: <span style="font-style: italic;">'int8'</span>,
+        <span style="font-style: italic;">'object'</span>: <span style="font-style: italic;">'varchar(512)'</span>,
+        <span style="font-style: italic;">'float64'</span>: <span style="font-style: italic;">'float8'</span>}
+
+    <span style="font-weight: bold;">for</span> col, tp <span style="font-weight: bold;">in</span> df.dtypes.items():
+        <span style="font-weight: bold; font-style: italic;">t</span> = type_map[tp.name]
+        <span style="font-weight: bold; font-style: italic;">item</span> = f<span style="font-style: italic;">'''"{col}"  {t}'''</span>
+        schema.append(item)
+    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">', '</span>.join(schema)
+</pre>
+</div>
+
+<p>
+如果要增加跟多复杂的类型作为 <code>pandas dataframe</code> 和 <code>pgsql</code> 的映射，可以往 <code>type_map</code> 里面添加对应的类型。
+或者你也可以修改非 <code>pgsql</code> 的类型数据库对应的字段，以匹配你真实的需求。
+</p></li>
+
+<li><p>
+上传 <code>pandas dataframe</code> 数据到数据库临时表
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">create_temp_table_with_df</span>(conn, table, dataframe):
+    <span style="font-style: italic;">'''conn is a pgsql connect transaction</span>
+<span style="font-style: italic;">    table is the name of the temp table and df is the pandas dataframe</span>
+<span style="font-style: italic;">    '''</span>
+    <span style="font-weight: bold; font-style: italic;">schema</span> = infer_pd_schema(dataframe)
+    conn.query(f<span style="font-style: italic;">'drop table if exists {table}'</span>)
+
+    <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''create TEMPORARY table if not exists {table}</span>
+<span style="font-style: italic;">    ({schema});'''</span>
+    logger.info(query)
+    conn.query(query)
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">After testing, threads will not improve the uploading performance</span>
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span>
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">600,000 records can be delivered within secs.</span>
+
+    <span style="font-weight: bold;">with</span> tempfile.NamedTemporaryFile() <span style="font-weight: bold;">as</span> tf:
+        <span style="font-weight: bold; font-style: italic;">name</span> = tf.name
+        logger.info(f<span style="font-style: italic;">'creating temp data file {name}'</span>)
+        dataframe.to_csv(name, header=<span style="font-weight: bold; text-decoration: underline;">True</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>)
+        <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''</span>
+<span style="font-style: italic;">        copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span>
+<span style="font-style: italic;">        '''</span>
+        <span style="font-weight: bold; font-style: italic;">rconn</span> = conn._conn.connection
+        <span style="font-weight: bold; font-style: italic;">cursor</span> = rconn.cursor()
+        <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(name, <span style="font-style: italic;">'r'</span>) <span style="font-weight: bold;">as</span> f:
+            cursor.copy_expert(query, f)
+        rconn.commit()
+    logger.info(<span style="font-style: italic;">'upload data done'</span>)
+</pre>
+</div>
+
+<p>
+当 <code>pandas</code> 的数据量很大比如几百万条记录时， <code>sql insert</code> 操作的性能往往不会很好。即便是使用多线程操作，性能的提升也是不明显。
+这里我采用了 <code>pgsql</code> 的 <code>copy</code> 命令， 很 <code>tricky</code> 的深入了 <code>records</code> 库的低层 <code>connection</code> 调用方法。 百万级的记录上传只需要秒级就可以完成。
+</p></li>
+
+<li><p>
+对 <code>pandas dataframe</code> 的临时表与数据库中已经有的表做联合操作
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">query_pg_with_df</span>(table, dataframe, sql):
+    <span style="font-style: italic;">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span>
+<span style="font-style: italic;">    return a pandas dataframe</span>
+<span style="font-style: italic;">    '''</span>
+    <span style="font-weight: bold; font-style: italic;">pgdb</span> = records.Database(
+        <span style="font-style: italic;">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.<span style="font-weight: bold;">format</span>(
+            host=PG_SQL_HOST,
+            db=PG_SQL_NAME,
+            user=PG_SQL_USER,
+            pwd=PG_SQL_PASS)
+    )
+
+    <span style="font-weight: bold;">try</span>:
+        <span style="font-weight: bold;">with</span> pgdb.transaction() <span style="font-weight: bold;">as</span> conn:
+            create_temp_table_with_df(conn, table, dataframe)
+            logger.info(sql)
+            <span style="font-weight: bold; font-style: italic;">res</span> = conn.query(sql)
+            <span style="font-weight: bold;">return</span> pd.DataFrame(res.as_dict())
+    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">Exception</span> <span style="font-weight: bold;">as</span> e:
+        logger.error(e.msg)
+    <span style="font-weight: bold;">finally</span>:
+        pgdb.close()
+</pre>
+</div>
+
+<p>
+这里函数中的 <code>table</code> 变量是指后面 <code>pandas dataframe</code> 上传至 <code>pgsql</code> 之后的临时表名。变量 <code>sql</code> 就可以操作这个临时表和数据库里面其他表做正常的类似 <code>join</code> 的操作。
+返回的结果是一个 <code>pandas dataframe</code> 。 这样就可以在内存中做后续进一步的处理了。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgaa63b97" class="outline-2">
+<h2 id="orgaa63b97">总结</h2>
+<div class="outline-text-2" id="text-orgaa63b97">
+<ul class="org-ul">
+<li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
+<li>提供了 <code>pandas dataframe</code> 如何与 <code>pgsql</code> 里的表做交互比如 <code>join</code> 等操作。</li>
+<li>可以根据实际采用的 <code>sql</code> 服务类型，修改此代码 <code>porting</code> 到 <code>mysql</code> 或者别的 <code>sql service</code> 。</li>
+</ul>
+</div>
+</div>
+</div>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>]]></content>
+      <categories>
+        <category>programming</category>
+        <category>bigdata</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>pandas</tag>
+        <tag>pgsql</tag>
+        <tag>hive</tag>
+        <tag>presto</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基于postfix和dovecot搭建个人邮件服务器</title>
     <url>/2020/03/15/postfix-dovecot-config/</url>
     <content><![CDATA[<div id="content">
 
-<div id="outline-container-orgdbdd56e" class="outline-2">
-<h2 id="orgdbdd56e">准备工作</h2>
-<div class="outline-text-2" id="text-orgdbdd56e">
+<div id="outline-container-orgfd455f5" class="outline-2">
+<h2 id="orgfd455f5">准备工作</h2>
+<div class="outline-text-2" id="text-orgfd455f5">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -34,17 +235,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org3b75ed1" class="outline-2">
-<h2 id="org3b75ed1">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org3b75ed1">
+<div id="outline-container-org9efa209" class="outline-2">
+<h2 id="org9efa209">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org9efa209">
 </div>
-<div id="outline-container-org8f246da" class="outline-3">
-<h3 id="org8f246da">配置SSL证书</h3>
-<div class="outline-text-3" id="text-org8f246da">
+<div id="outline-container-org78c22b2" class="outline-3">
+<h3 id="org78c22b2">配置SSL证书</h3>
+<div class="outline-text-3" id="text-org78c22b2">
 </div>
-<div id="outline-container-org9404648" class="outline-4">
-<h4 id="org9404648">生成私有证书</h4>
-<div class="outline-text-4" id="text-org9404648">
+<div id="outline-container-org7a1782c" class="outline-4">
+<h4 id="org7a1782c">生成私有证书</h4>
+<div class="outline-text-4" id="text-org7a1782c">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -77,9 +278,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org81e86e7" class="outline-3">
-<h3 id="org81e86e7">配置Postfix</h3>
-<div class="outline-text-3" id="text-org81e86e7">
+<div id="outline-container-orga530b6d" class="outline-3">
+<h3 id="orga530b6d">配置Postfix</h3>
+<div class="outline-text-3" id="text-orga530b6d">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -133,9 +334,9 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 </ul>
 </div>
 </div>
-<div id="outline-container-org08ccade" class="outline-3">
-<h3 id="org08ccade">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org08ccade">
+<div id="outline-container-orgd3cca53" class="outline-3">
+<h3 id="orgd3cca53">配置Dovecot</h3>
+<div class="outline-text-3" id="text-orgd3cca53">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
@@ -159,9 +360,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-org8d7e10f" class="outline-3">
-<h3 id="org8d7e10f">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-org8d7e10f">
+<div id="outline-container-orgf9600cf" class="outline-3">
+<h3 id="orgf9600cf">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-orgf9600cf">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -191,9 +392,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-orgb3699e5" class="outline-3">
-<h3 id="orgb3699e5">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-orgb3699e5">
+<div id="outline-container-org26ade35" class="outline-3">
+<h3 id="org26ade35">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-org26ade35">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -251,9 +452,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org47bf9e1" class="outline-2">
-<h2 id="org47bf9e1">测试功能</h2>
-<div class="outline-text-2" id="text-org47bf9e1">
+<div id="outline-container-org1916d11" class="outline-2">
+<h2 id="org1916d11">测试功能</h2>
+<div class="outline-text-2" id="text-org1916d11">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
