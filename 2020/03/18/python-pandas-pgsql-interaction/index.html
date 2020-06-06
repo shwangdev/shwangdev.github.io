@@ -26,9 +26,9 @@
 <meta property="og:url" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/index.html">
 <meta property="og:site_name" content="肖恩&#96;s Blog">
 <meta property="og:description" content="问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段为空的部分从 postgresq 中再回填给 pandas 的 dataframe 中。 合并">
-<meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/python-pandas-pgsql-interaction/records.jpg">
+<meta property="og:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
 <meta property="article:published_time" content="2020-03-18T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-22T04:01:31.199Z">
+<meta property="article:modified_time" content="2020-06-06T06:46:43.367Z">
 <meta property="article:author" content="王翔">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="pandas">
@@ -36,7 +36,7 @@
 <meta property="article:tag" content="hive">
 <meta property="article:tag" content="presto">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://q78cpsmed.bkt.clouddn.com/python-pandas-pgsql-interaction/records.jpg">
+<meta name="twitter:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
 
 <link rel="canonical" href="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/">
 
@@ -199,7 +199,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-22 12:01:31" itemprop="dateModified" datetime="2020-03-22T12:01:31+08:00">2020-03-22</time>
+                <time title="Modified: 2020-06-06 14:46:43" itemprop="dateModified" datetime="2020-06-06T14:46:43+08:00">2020-06-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -270,9 +270,9 @@
       
         <div id="content">
 
-<div id="outline-container-org992dc0c" class="outline-2">
-<h2 id="org992dc0c">问题描述</h2>
-<div class="outline-text-2" id="text-org992dc0c">
+<div id="outline-container-org293e52b" class="outline-2">
+<h2 id="org293e52b">问题描述</h2>
+<div class="outline-text-2" id="text-org293e52b">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
 </p>
@@ -301,9 +301,9 @@
 </div>
 </div>
 
-<div id="outline-container-org465d3e0" class="outline-2">
-<h2 id="org465d3e0">解决方案</h2>
-<div class="outline-text-2" id="text-org465d3e0">
+<div id="outline-container-orgb09cbb6" class="outline-2">
+<h2 id="orgb09cbb6">解决方案</h2>
+<div class="outline-text-2" id="text-orgb09cbb6">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
 但是又不想用很重的库如 <code>sqlalchemy</code> 等支持 <code>ORM</code> 的库，觉得还是对程序员不友好。而且要写很多手脚架来适配。
@@ -315,7 +315,7 @@
 
 
 <div class="figure">
-<p><img src="http://q78cpsmed.bkt.clouddn.com/python-pandas-pgsql-interaction/records.jpg">
+<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
 </p>
 </div>
 
@@ -424,9 +424,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgaa63b97" class="outline-2">
-<h2 id="orgaa63b97">总结</h2>
-<div class="outline-text-2" id="text-orgaa63b97">
+<div id="outline-container-orgd70de58" class="outline-2">
+<h2 id="orgd70de58">总结</h2>
+<div class="outline-text-2" id="text-orgd70de58">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
 <li>提供了 <code>pandas dataframe</code> 如何与 <code>pgsql</code> 里的表做交互比如 <code>join</code> 等操作。</li>
@@ -556,7 +556,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org992dc0c"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org465d3e0"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgaa63b97"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org293e52b"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgb09cbb6"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd70de58"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

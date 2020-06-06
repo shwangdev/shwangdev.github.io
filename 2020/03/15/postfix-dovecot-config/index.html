@@ -26,16 +26,16 @@
 <meta property="og:url" content="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/index.html">
 <meta property="og:site_name" content="肖恩&#96;s Blog">
 <meta property="og:description" content="准备工作   首先你需要一个 Linux 的 VPS ，以及一个可以用的域名。 VPS 的操作系统可以选 Ubuntu 或者 centos 等主流的 Linux 系统。 同时删除原来系统里面的 sentmail 相关的 package 。 在你的域名供应商的平台上配置好你的域名解析。 一般情况下，需要配置3种域名解析类型， 分别是 A, MX, TXT 下面是我的配置, 我用的是阿里云的域名">
-<meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
-<meta property="og:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/mastercf.png">
+<meta property="og:image" content="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png">
+<meta property="og:image" content="http://shwang.ink:4800/images/postfix-dovecot-config/mastercf.png">
 <meta property="article:published_time" content="2020-03-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-16T15:27:39.863Z">
+<meta property="article:modified_time" content="2020-06-06T06:46:06.887Z">
 <meta property="article:author" content="王翔">
 <meta property="article:tag" content="postfix">
 <meta property="article:tag" content="dovecot">
 <meta property="article:tag" content="mail">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png">
+<meta name="twitter:image" content="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png">
 
 <link rel="canonical" href="https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/">
 
@@ -198,7 +198,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-16 23:27:39" itemprop="dateModified" datetime="2020-03-16T23:27:39+08:00">2020-03-16</time>
+                <time title="Modified: 2020-06-06 14:46:06" itemprop="dateModified" datetime="2020-06-06T14:46:06+08:00">2020-06-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -265,9 +265,9 @@
       
         <div id="content">
 
-<div id="outline-container-orgfd455f5" class="outline-2">
-<h2 id="orgfd455f5">准备工作</h2>
-<div class="outline-text-2" id="text-orgfd455f5">
+<div id="outline-container-orgddcdaec" class="outline-2">
+<h2 id="orgddcdaec">准备工作</h2>
+<div class="outline-text-2" id="text-orgddcdaec">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -275,7 +275,7 @@
 <li>在你的域名供应商的平台上配置好你的域名解析。
 一般情况下，需要配置3种域名解析类型， 分别是 <code>A</code>, <code>MX</code>, <code>TXT</code>
 下面是我的配置, 我用的是阿里云的域名服务：
-<img src="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/domain_configure.png"></li>
+<img src="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png"></li>
 <li><p>
 在 <code>VPS</code> 上安装好 <code>postfix</code> ， <code>dovecot</code> ， <code>sasl-dev</code> 等软件。
 <code>libsasl</code> 是 <code>postfix</code> 和 <code>dovecot</code> 认证用的。你需要根据你的 <code>VPS</code> 操作系统的类型选择对应的包管理工具安装这些包。
@@ -294,17 +294,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org9efa209" class="outline-2">
-<h2 id="org9efa209">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org9efa209">
+<div id="outline-container-org3c31531" class="outline-2">
+<h2 id="org3c31531">配置的详细过程</h2>
+<div class="outline-text-2" id="text-org3c31531">
 </div>
-<div id="outline-container-org78c22b2" class="outline-3">
-<h3 id="org78c22b2">配置SSL证书</h3>
-<div class="outline-text-3" id="text-org78c22b2">
+<div id="outline-container-orgc6fd9e3" class="outline-3">
+<h3 id="orgc6fd9e3">配置SSL证书</h3>
+<div class="outline-text-3" id="text-orgc6fd9e3">
 </div>
-<div id="outline-container-org7a1782c" class="outline-4">
-<h4 id="org7a1782c">生成私有证书</h4>
-<div class="outline-text-4" id="text-org7a1782c">
+<div id="outline-container-orgca3ce7c" class="outline-4">
+<h4 id="orgca3ce7c">生成私有证书</h4>
+<div class="outline-text-4" id="text-orgca3ce7c">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -337,9 +337,9 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-orga530b6d" class="outline-3">
-<h3 id="orga530b6d">配置Postfix</h3>
-<div class="outline-text-3" id="text-orga530b6d">
+<div id="outline-container-org41b1de3" class="outline-3">
+<h3 id="org41b1de3">配置Postfix</h3>
+<div class="outline-text-3" id="text-org41b1de3">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
@@ -389,13 +389,13 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 <code>account</code> 和 <code>password</code> 替换为你真实的用户名和密码。
 </p></li>
 <li>编辑 <code>/etc/postfix/master.cf</code> 文件。
-<img src="http://q78cpsmed.bkt.clouddn.com/postfix-dovecot-config/mastercf.png"></li>
+<img src="http://shwang.ink:4800/images/postfix-dovecot-config/mastercf.png"></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd3cca53" class="outline-3">
-<h3 id="orgd3cca53">配置Dovecot</h3>
-<div class="outline-text-3" id="text-orgd3cca53">
+<div id="outline-container-org17b648d" class="outline-3">
+<h3 id="org17b648d">配置Dovecot</h3>
+<div class="outline-text-3" id="text-org17b648d">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
@@ -419,9 +419,9 @@ ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
 </div>
 </div>
 
-<div id="outline-container-orgf9600cf" class="outline-3">
-<h3 id="orgf9600cf">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-orgf9600cf">
+<div id="outline-container-orge490a2c" class="outline-3">
+<h3 id="orge490a2c">生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-orge490a2c">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
@@ -451,9 +451,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org26ade35" class="outline-3">
-<h3 id="org26ade35">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-org26ade35">
+<div id="outline-container-orgfe9bb0e" class="outline-3">
+<h3 id="orgfe9bb0e">确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-orgfe9bb0e">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -511,9 +511,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org1916d11" class="outline-2">
-<h2 id="org1916d11">测试功能</h2>
-<div class="outline-text-2" id="text-org1916d11">
+<div id="outline-container-org5268e8c" class="outline-2">
+<h2 id="org5268e8c">测试功能</h2>
+<div class="outline-text-2" id="text-org5268e8c">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -730,7 +730,7 @@ tag OK List completed (0.001 + 0.000 secs).
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgfd455f5"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org9efa209"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org78c22b2"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#org7a1782c"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orga530b6d"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgd3cca53"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgf9600cf"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org26ade35"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org1916d11"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgddcdaec"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org3c31531"><span class="nav-number">2.</span> <span class="nav-text">配置的详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orgc6fd9e3"><span class="nav-number">2.1.</span> <span class="nav-text">配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#orgca3ce7c"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成私有证书</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org41b1de3"><span class="nav-number">2.2.</span> <span class="nav-text">配置Postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org17b648d"><span class="nav-number">2.3.</span> <span class="nav-text">配置Dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orge490a2c"><span class="nav-number">2.4.</span> <span class="nav-text">生效配置，重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgfe9bb0e"><span class="nav-number">2.5.</span> <span class="nav-text">确认以及配置防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org5268e8c"><span class="nav-number">3.</span> <span class="nav-text">测试功能</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
