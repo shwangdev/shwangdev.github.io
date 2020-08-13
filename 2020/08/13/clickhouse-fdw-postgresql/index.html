@@ -28,7 +28,7 @@
 <meta property="og:description" content="Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw 依赖高版本的 GNU tool chain 需要使用 GCC 7+ 来编译， 并且依赖的一些第三方库的版本也比较高， 原生 CentOS 的 repo 不能满足依赖，所以用选用 Conda 环境来解决依赖并 build 生成动态库。      本质上 Clickhouse-fdw 是一个 postgr">
 <meta property="og:image" content="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
 <meta property="article:published_time" content="2020-08-13T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-08-13T12:51:24.007Z">
+<meta property="article:modified_time" content="2020-08-13T12:56:13.565Z">
 <meta property="article:author" content="王翔">
 <meta property="article:tag" content="pgsql">
 <meta property="article:tag" content="clickhouse">
@@ -190,7 +190,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-13 08:00:00 / Modified: 20:51:24" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
+              <time title="Created: 2020-08-13 08:00:00 / Modified: 20:56:13" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,9 +258,9 @@
         <div id="content">
 
 
-<div id="outline-container-org1ac56bc" class="outline-2">
-<h2 id="org1ac56bc">Conda环境下搭建Clickhouse-fdw</h2>
-<div class="outline-text-2" id="text-org1ac56bc">
+<div id="outline-container-orgd7e29ae" class="outline-2">
+<h2 id="orgd7e29ae">Conda环境下搭建Clickhouse-fdw</h2>
+<div class="outline-text-2" id="text-orgd7e29ae">
 <p>
 由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
 原生 <code>CentOS</code> 的 <code>repo</code> 不能满足依赖，所以用选用 <code>Conda</code> 环境来解决依赖并 <code>build</code> 生成动态库。
@@ -274,9 +274,9 @@
 </div>
 </div>
 
-<div id="outline-container-org5af3326" class="outline-3">
-<h3 id="org5af3326">编译clickhouse-odbc</h3>
-<div class="outline-text-3" id="text-org5af3326">
+<div id="outline-container-orga2a2c46" class="outline-3">
+<h3 id="orga2a2c46">编译clickhouse-odbc</h3>
+<div class="outline-text-3" id="text-orga2a2c46">
 <ol class="org-ol">
 <li><p>
 递归拉取 <code>clichouse-odbc</code> 的 <code>source</code>, <code>--recursive</code> 可以把项目下的 <code>sub project</code> 一并拉下来。
@@ -299,23 +299,20 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 <p>
 在第7部的时候会有报错，错误步骤是在编译 <code>gtest</code> 的测试 <code>binary</code>, 其实可以不用解决，因为在此错误之前 <code>libclickhouseodbc.so</code> 已经被编译出来了。
 </p>
-<blockquote>
-<p>
-(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
+<pre class="example">(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
     linux-vdso.so.1 (0x00007ffd111b4000)
     libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f4fcd072000)
     libstdc++.so.6 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libstdc++.so.6 (0x00007f4fcd616000)
-    libgcc<sub>s.so.1</sub> =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libgcc<sub>s.so.1</sub> (0x00007f4fcd602000)
+    libgcc_s.so.1 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libgcc_s.so.1 (0x00007f4fcd602000)
     libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f4fcccc7000)
     librt.so.1 =&gt; /lib64/librt.so.1 (0x00007f4fccabf000)
     libodbcinst.so.2 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libodbcinst.so.2 (0x00007f4fcc8a4000)
     libicuuc.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libicuuc.so.58 (0x00007f4fcc6f1000)
     /lib64/ld-linux-x86-64.so.2 (0x00007f4fcd573000)
     libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f4fcc3b1000)
-    libdl.so.2 =&gt; <i>lib64/libdl.so.2 (0x00007f4fcc1ad000)
-    libicudata.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib</i>./libicudata.so.58 (0x00007f4fca8ab000)
-</p>
-</blockquote>
+    libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007f4fcc1ad000)
+    libicudata.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/./libicudata.so.58 (0x00007f4fca8ab000)
+</pre>
 <p>
 查看是否有找不到的动态库地址。
 </p></li>
@@ -323,45 +320,39 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 </div>
 </div>
 
-<div id="outline-container-orgadf4c5e" class="outline-3">
-<h3 id="orgadf4c5e">编译clickhouse-fdw</h3>
-<div class="outline-text-3" id="text-orgadf4c5e">
+<div id="outline-container-orgd4470fa" class="outline-3">
+<h3 id="orgd4470fa">编译clickhouse-fdw</h3>
+<div class="outline-text-3" id="text-orgd4470fa">
 <p>
 <code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
 <code>Conda</code> 安装的 <code>postgresql</code> 没有写入 <code>systemctl</code>, 需要手动配置启动。
 <code>Conda</code> 安装的 <code>postgresql pg_config</code> 输出的系统变量里"CC"的指向路径是有问题的。
 </p>
-<blockquote>
-<p>
-pg<sub>config</sub> 
-….
-CC = /tmp/build/80754af9/postgresql-split<sub>1545233302450</sub>/<sub>build</sub><sub>env</sub>/bin/x86<sub>64</sub>-conda<sub>cos6</sub>-linux-gnu-cc
-</p>
-</blockquote>
+<pre class="example">pg_config 
+....
+CC = /tmp/build/80754af9/postgresql-split_1545233302450/_build_env/bin/x86_64-conda_cos6-linux-gnu-cc
+</pre>
 
 <p>
 这里 <code>CC</code> 是只编译 <code>postgresql</code> 的编译器路径，系统里根本没有这个，需要修改 <code>Makefile</code> 里面强制指向 <code>CC</code> 到系统的 <code>gcc</code> 编译器，否则会报错。
 </p>
 
-<blockquote>
-<p>
-(py3) [ec2-user@ip-172-31-46-209 clickhousedb<sub>fdw</sub>]$ make USE<sub>PGXS</sub>=1
+<pre class="example">(py3) [ec2-user@ip-172-31-46-209 clickhousedb_fdw]$ make USE_PGXS=1
 rm -rf libclickhouse-1.0.so lib/*.o
 make -f lib/Makefile
-make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 g++ -Wall -Wpointer-arith -O2 -fPIC -O0 -g3 -Wno-unused-variable -fPIC -Wall -I. -Ilib   -c -o lib/clickhouse-client.o lib/clickhouse-client.cpp
-g++ -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -pipe -I/home/ec2-user/miniconda3/envs/py3/include -fdebug-prefix-map==/usr/local/src/conda/- -fdebug-prefix-map==/usr/local/src/conda-prefix -fPIC lib/clickhouse-client.o -o libclickhouse-1.0.so -L/home/ec2-user/miniconda3/envs/py3/lib -L. -lclickhouse-1.0 -lodbc -lodbcinst -Wl,-O2 -Wl,–sort-common -Wl,–as-needed -Wl,-z,relro -Wl,-z,now -Wl,–disable-new-dtags -Wl,-rpath,/home/ec2-user/miniconda3/envs/py3/lib -L/home/ec2-user/miniconda3/envs/py3/lib  -L/home/ec2-user/miniconda3/envs/py3/lib -Wl,–as-needed -Wl,-rpath,'/home/ec2-user/miniconda3/envs/py3/lib',–disable-new-dtags -fPIC -shared -ldl -lstdc++ -L -lodbc
+g++ -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -pipe -I/home/ec2-user/miniconda3/envs/py3/include -fdebug-prefix-map==/usr/local/src/conda/- -fdebug-prefix-map==/usr/local/src/conda-prefix -fPIC lib/clickhouse-client.o -o libclickhouse-1.0.so -L/home/ec2-user/miniconda3/envs/py3/lib -L. -lclickhouse-1.0 -lodbc -lodbcinst -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,-rpath,/home/ec2-user/miniconda3/envs/py3/lib -L/home/ec2-user/miniconda3/envs/py3/lib  -L/home/ec2-user/miniconda3/envs/py3/lib -Wl,--as-needed -Wl,-rpath,'/home/ec2-user/miniconda3/envs/py3/lib',--disable-new-dtags -fPIC -shared -ldl -lstdc++ -L -lodbc
 make[1]: 放弃循环依赖 test &lt;- test 。
-g++ -O0 -g3 -Wno-unused-variable -Iinclude  lib/example/odbc<sub>test.o</sub> -o test -ldl -L. -lclickhouse-1.0 -lodbc -lodbcinst
-make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+g++ -O0 -g3 -Wno-unused-variable -Iinclude  lib/example/odbc_test.o -o test -ldl -L. -lclickhouse-1.0 -lodbc -lodbcinst
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 make -f lib/Makefile
-make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 make[1]: 放弃循环依赖 test &lt;- test 。
 make[1]: 对“all”无需做任何事。
-make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 /usr/bin/install -c -m 755 libclickhouse-1.0.so /home/ec2-user/miniconda3/envs/py3/lib/libclickhouse-1.0.so
-</p>
-</blockquote>
+</pre>
 <p>
 最后运行 <code>make USE_PGXS=1 install</code> 把对应的动态库放到制定位置。
 </p>
@@ -370,9 +361,9 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
 </div>
 
 
-<div id="outline-container-orgd4c1ab9" class="outline-2">
-<h2 id="orgd4c1ab9">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
-<div class="outline-text-2" id="text-orgd4c1ab9">
+<div id="outline-container-org13d7552" class="outline-2">
+<h2 id="org13d7552">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div class="outline-text-2" id="text-org13d7552">
 <p>
 先配置 <code>clickhouse</code> 表并导入数据
 </p>
@@ -609,7 +600,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org1ac56bc"><span class="nav-number">1.</span> <span class="nav-text">Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org5af3326"><span class="nav-number">1.1.</span> <span class="nav-text">编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgadf4c5e"><span class="nav-number">1.2.</span> <span class="nav-text">编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd4c1ab9"><span class="nav-number">2.</span> <span class="nav-text">配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd7e29ae"><span class="nav-number">1.</span> <span class="nav-text">Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orga2a2c46"><span class="nav-number">1.1.</span> <span class="nav-text">编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgd4470fa"><span class="nav-number">1.2.</span> <span class="nav-text">编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org13d7552"><span class="nav-number">2.</span> <span class="nav-text">配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
