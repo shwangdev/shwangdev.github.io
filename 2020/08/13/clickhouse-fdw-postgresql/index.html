@@ -20,25 +20,22 @@
     var CONFIG = {"hostname":"blog.machineheart.tech","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段为空的部分从 postgresq 中再回填给 pandas 的 dataframe 中。 合并">
+  <meta name="description" content="Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw 依赖高版本的 GNU tool chain 需要使用 GCC 7+ 来编译， 并且依赖的一些第三方库的版本也比较高， 原生 CentOS 的 repo 不能满足依赖，所以用选用 Conda 环境来解决依赖并 build 生成动态库。      本质上 Clickhouse-fdw 是一个 postgr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python Pandas库如何优雅的与数据库交互">
-<meta property="og:url" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/index.html">
+<meta property="og:title" content="基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索">
+<meta property="og:url" content="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/index.html">
 <meta property="og:site_name" content="肖恩&#96;s Blog">
-<meta property="og:description" content="问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段为空的部分从 postgresq 中再回填给 pandas 的 dataframe 中。 合并">
-<meta property="og:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
-<meta property="article:published_time" content="2020-03-18T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-06T06:46:43.367Z">
+<meta property="og:description" content="Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw 依赖高版本的 GNU tool chain 需要使用 GCC 7+ 来编译， 并且依赖的一些第三方库的版本也比较高， 原生 CentOS 的 repo 不能满足依赖，所以用选用 Conda 环境来解决依赖并 build 生成动态库。      本质上 Clickhouse-fdw 是一个 postgr">
+<meta property="og:image" content="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+<meta property="article:published_time" content="2020-08-13T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-13T12:51:24.007Z">
 <meta property="article:author" content="王翔">
-<meta property="article:tag" content="python">
-<meta property="article:tag" content="pandas">
 <meta property="article:tag" content="pgsql">
-<meta property="article:tag" content="hive">
-<meta property="article:tag" content="presto">
+<meta property="article:tag" content="clickhouse">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
+<meta name="twitter:image" content="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
 
-<link rel="canonical" href="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/">
+<link rel="canonical" href="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/">
 
 
 <script id="page-configurations">
@@ -51,7 +48,7 @@
   };
 </script>
 
-  <title>Python Pandas库如何优雅的与数据库交互 | 肖恩`s Blog</title>
+  <title>基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索 | 肖恩`s Blog</title>
   
 
 
@@ -169,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/">
+    <link itemprop="mainEntityOfPage" href="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/emacs.png">
@@ -182,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Python Pandas库如何优雅的与数据库交互
+          基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索
         </h1>
 
         <div class="post-meta">
@@ -191,32 +188,22 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-03-18 08:00:00" itemprop="dateCreated datePublished" datetime="2020-03-18T08:00:00+08:00">2020-03-18</time>
+              <time title="Created: 2020-08-13 08:00:00 / Modified: 20:51:24" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-06-06 14:46:43" itemprop="dateModified" datetime="2020-06-06T14:46:43+08:00">2020-06-06</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/bigdata/" itemprop="url" rel="index"><span itemprop="name">bigdata</span></a>
+                  <a href="/categories/bigdata/" itemprop="url" rel="index"><span itemprop="name">bigdata</span></a>
                 </span>
             </span>
 
           
-            <span id="/2020/03/18/python-pandas-pgsql-interaction/" class="post-meta-item leancloud_visitors" data-flag-title="Python Pandas库如何优雅的与数据库交互" title="Views">
+            <span id="/2020/08/13/clickhouse-fdw-postgresql/" class="post-meta-item leancloud_visitors" data-flag-title="基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -238,8 +225,8 @@
       </span>
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2020/03/18/python-pandas-pgsql-interaction/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/python-pandas-pgsql-interaction/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/08/13/clickhouse-fdw-postgresql/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/13/clickhouse-fdw-postgresql/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -249,14 +236,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3k</span>
+              <span>5.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -270,168 +257,237 @@
       
         <div id="content">
 
-<div id="outline-container-org293e52b" class="outline-2">
-<h2 id="org293e52b">问题描述</h2>
-<div class="outline-text-2" id="text-org293e52b">
-<p>
-最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
-</p>
-<ul class="org-ul">
-<li>从 <code>google</code> <code>bigquery</code> 大叔据平台将计算和聚合过的每小时结果集存在 <code>pandas</code> 的 <code>dataframe</code> 中。</li>
-<li><code>pandas</code> 的数据与 <code>postgresql</code> 数据库同步, 将结果集中有些字段为空的部分从 <code>postgresq</code> 中再回填给 <code>pandas</code> 的 <code>dataframe</code> 中。</li>
-<li>合并之后的结果在更新入 <code>postgresq</code>, 同时写入 <code>hive</code> 表中便于后期用 <code>presto</code> 做长查询。</li>
-</ul>
 
+<div id="outline-container-org1ac56bc" class="outline-2">
+<h2 id="org1ac56bc">Conda环境下搭建Clickhouse-fdw</h2>
+<div class="outline-text-2" id="text-org1ac56bc">
 <p>
-本来这套逻辑似乎更适用于 <code>spark</code> <code>map reduce</code> 来做，但是由于 <code>bigquery</code> 的计算分布在几十个 <code>gcp project</code> 里面。
-<code>spark</code> 调用 <code>bigquery</code> 的话配置权限很麻烦，同时结果集每小时的大小也只在三万到十万级别。 
-计算任务是在 <code>bigquery</code> 中完成, 所以这时候调用 <code>spark</code> 似乎有点重了。所以决定使用 <code>python pandas</code>  配合别的大数据主件。
+由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
+原生 <code>CentOS</code> 的 <code>repo</code> 不能满足依赖，所以用选用 <code>Conda</code> 环境来解决依赖并 <code>build</code> 生成动态库。
 </p>
 
-<p>
-<code>bigquer</code> 每次会计算历史10几个小时的聚合结果集，按照每小时3-10万的量算下来，最多一次合并 <code>postgresq</code> 的量级在百万以内。
-这个量级在合并的时候从 <code>pgsql</code> 拉数据下来，再在内存中用 <code>pandas</code> 做 <code>join</code> 明显不是明智的选择。 
-从 <code>pgsql</code> 中 <code>select</code> 百万记录下来 <code>pandas</code> <code>join</code> 完之后再上传 <code>pqsql</code> ，再 <code>update</code> 无疑增加了计算的复杂度。
-所以我的选择是: <b>按小时将 <code>pandas</code> <code>dataframe</code> 上传到 <code>pgsql</code> 临时表， 直接在数据库中做 <code>join</code> 并 <code>update</code> <code>pgsql</code> 中的记录</b> 。
-</p>
 
+<div class="org-center">
 <p>
-因此我们需要实现的就是如何优雅的把 <code>pandas dataframe</code> 上传到 <code>pgsql</code> 的临时表，并提供接口操作临时表和已有的表做运算。
+本质上 <code>Clickhouse-fdw</code> 是一个 <code>postgresql</code> 的 <code>extension</code> 动态库, 它与 <code>Clickhouse</code> 之间的连接是使用的 <code>Clickhouse-odbc</code> 库。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgb09cbb6" class="outline-2">
-<h2 id="orgb09cbb6">解决方案</h2>
-<div class="outline-text-2" id="text-orgb09cbb6">
-<p>
-虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
-但是又不想用很重的库如 <code>sqlalchemy</code> 等支持 <code>ORM</code> 的库，觉得还是对程序员不友好。而且要写很多手脚架来适配。
-</p>
-
-<p>
-所以这里推荐我常用的数据库连接库 <a href="https://github.com/kennethreitz-archive/records" target="_blank" rel="noopener">records</a>
-</p>
-
-
-<div class="figure">
-<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
-</p>
-</div>
-
-<ul class="org-ul">
+<div id="outline-container-org5af3326" class="outline-3">
+<h3 id="org5af3326">编译clickhouse-odbc</h3>
+<div class="outline-text-3" id="text-org5af3326">
+<ol class="org-ol">
 <li><p>
-动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
+递归拉取 <code>clichouse-odbc</code> 的 <code>source</code>, <code>--recursive</code> 可以把项目下的 <code>sub project</code> 一并拉下来。
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">infer_pd_schema</span>(df):
-    <span style="font-style: italic;">'''infer pandas dataframe schema</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = []
-    <span style="font-weight: bold; font-style: italic;">type_map</span> = {
-        <span style="font-style: italic;">'int64'</span>: <span style="font-style: italic;">'int8'</span>,
-        <span style="font-style: italic;">'object'</span>: <span style="font-style: italic;">'varchar(512)'</span>,
-        <span style="font-style: italic;">'float64'</span>: <span style="font-style: italic;">'float8'</span>}
+<pre class="src src-bash">git clone --recursive https@github.com:ClickHouse/clickhouse-odbc.git
+</pre>
+</div></li>
+<li><p>
+编译Clickhouse-odbc, README里面使用的是devtoolset-8 为了解决高版本的GCC的问题，我这里用的Conda的环境，需要用conda 安装gcc 7以及其他包括cmake 14+在内的依赖包.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="font-weight: bold;">cd</span> clickhouse-odbc
+mkdir build
+<span style="font-weight: bold;">cd</span> build
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span>
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+</pre>
+</div>
+<p>
+在第7部的时候会有报错，错误步骤是在编译 <code>gtest</code> 的测试 <code>binary</code>, 其实可以不用解决，因为在此错误之前 <code>libclickhouseodbc.so</code> 已经被编译出来了。
+</p>
+<blockquote>
+<p>
+(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
+    linux-vdso.so.1 (0x00007ffd111b4000)
+    libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f4fcd072000)
+    libstdc++.so.6 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libstdc++.so.6 (0x00007f4fcd616000)
+    libgcc<sub>s.so.1</sub> =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libgcc<sub>s.so.1</sub> (0x00007f4fcd602000)
+    libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f4fcccc7000)
+    librt.so.1 =&gt; /lib64/librt.so.1 (0x00007f4fccabf000)
+    libodbcinst.so.2 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libodbcinst.so.2 (0x00007f4fcc8a4000)
+    libicuuc.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libicuuc.so.58 (0x00007f4fcc6f1000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f4fcd573000)
+    libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f4fcc3b1000)
+    libdl.so.2 =&gt; <i>lib64/libdl.so.2 (0x00007f4fcc1ad000)
+    libicudata.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib</i>./libicudata.so.58 (0x00007f4fca8ab000)
+</p>
+</blockquote>
+<p>
+查看是否有找不到的动态库地址。
+</p></li>
+</ol>
+</div>
+</div>
 
-    <span style="font-weight: bold;">for</span> col, tp <span style="font-weight: bold;">in</span> df.dtypes.items():
-        <span style="font-weight: bold; font-style: italic;">t</span> = type_map[tp.name]
-        <span style="font-weight: bold; font-style: italic;">item</span> = f<span style="font-style: italic;">'''"{col}"  {t}'''</span>
-        schema.append(item)
-    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">', '</span>.join(schema)
+<div id="outline-container-orgadf4c5e" class="outline-3">
+<h3 id="orgadf4c5e">编译clickhouse-fdw</h3>
+<div class="outline-text-3" id="text-orgadf4c5e">
+<p>
+<code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
+<code>Conda</code> 安装的 <code>postgresql</code> 没有写入 <code>systemctl</code>, 需要手动配置启动。
+<code>Conda</code> 安装的 <code>postgresql pg_config</code> 输出的系统变量里"CC"的指向路径是有问题的。
+</p>
+<blockquote>
+<p>
+pg<sub>config</sub> 
+….
+CC = /tmp/build/80754af9/postgresql-split<sub>1545233302450</sub>/<sub>build</sub><sub>env</sub>/bin/x86<sub>64</sub>-conda<sub>cos6</sub>-linux-gnu-cc
+</p>
+</blockquote>
+
+<p>
+这里 <code>CC</code> 是只编译 <code>postgresql</code> 的编译器路径，系统里根本没有这个，需要修改 <code>Makefile</code> 里面强制指向 <code>CC</code> 到系统的 <code>gcc</code> 编译器，否则会报错。
+</p>
+
+<blockquote>
+<p>
+(py3) [ec2-user@ip-172-31-46-209 clickhousedb<sub>fdw</sub>]$ make USE<sub>PGXS</sub>=1
+rm -rf libclickhouse-1.0.so lib/*.o
+make -f lib/Makefile
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+g++ -Wall -Wpointer-arith -O2 -fPIC -O0 -g3 -Wno-unused-variable -fPIC -Wall -I. -Ilib   -c -o lib/clickhouse-client.o lib/clickhouse-client.cpp
+g++ -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -pipe -I/home/ec2-user/miniconda3/envs/py3/include -fdebug-prefix-map==/usr/local/src/conda/- -fdebug-prefix-map==/usr/local/src/conda-prefix -fPIC lib/clickhouse-client.o -o libclickhouse-1.0.so -L/home/ec2-user/miniconda3/envs/py3/lib -L. -lclickhouse-1.0 -lodbc -lodbcinst -Wl,-O2 -Wl,–sort-common -Wl,–as-needed -Wl,-z,relro -Wl,-z,now -Wl,–disable-new-dtags -Wl,-rpath,/home/ec2-user/miniconda3/envs/py3/lib -L/home/ec2-user/miniconda3/envs/py3/lib  -L/home/ec2-user/miniconda3/envs/py3/lib -Wl,–as-needed -Wl,-rpath,'/home/ec2-user/miniconda3/envs/py3/lib',–disable-new-dtags -fPIC -shared -ldl -lstdc++ -L -lodbc
+make[1]: 放弃循环依赖 test &lt;- test 。
+g++ -O0 -g3 -Wno-unused-variable -Iinclude  lib/example/odbc<sub>test.o</sub> -o test -ldl -L. -lclickhouse-1.0 -lodbc -lodbcinst
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make -f lib/Makefile
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make[1]: 放弃循环依赖 test &lt;- test 。
+make[1]: 对“all”无需做任何事。
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+/usr/bin/install -c -m 755 libclickhouse-1.0.so /home/ec2-user/miniconda3/envs/py3/lib/libclickhouse-1.0.so
+</p>
+</blockquote>
+<p>
+最后运行 <code>make USE_PGXS=1 install</code> 把对应的动态库放到制定位置。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgd4c1ab9" class="outline-2">
+<h2 id="orgd4c1ab9">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div class="outline-text-2" id="text-orgd4c1ab9">
+<p>
+先配置 <code>clickhouse</code> 表并导入数据
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> DATABASE test_database;
+
+USE test_database;
+
+<span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span> 
+(
+    bbl Int64,
+    owner_name String,
+    address String,
+    tax_class String,
+    tax_rate String,
+    emv Float64,
+    tbea Float64,
+    bav Float64,
+    tba String,
+    property_tax String,
+    condonumber String,
+    condo String,
+    insertion_date DateTime MATERIALIZED now() 
+)
+ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_class <span style="font-weight: bold;">ORDER</span> <span style="font-weight: bold;">BY</span> (owner_name)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bash">curl -X GET <span style="font-style: italic;">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  <span style="font-style: italic;">\</span>
+  | clickhouse-client --input_format_allow_errors_num=10 <span style="font-style: italic;">\</span>
+  --query=<span style="font-style: italic;">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span>
 </pre>
 </div>
 
 <p>
-如果要增加跟多复杂的类型作为 <code>pandas dataframe</code> 和 <code>pgsql</code> 的映射，可以往 <code>type_map</code> 里面添加对应的类型。
-或者你也可以修改非 <code>pgsql</code> 的类型数据库对应的字段，以匹配你真实的需求。
-</p></li>
-
-<li><p>
-上传 <code>pandas dataframe</code> 数据到数据库临时表
+配置启动 <code>postgresql</code>,首先要初始化 <code>postgresq</code> 
 </p>
+
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">create_temp_table_with_df</span>(conn, table, dataframe):
-    <span style="font-style: italic;">'''conn is a pgsql connect transaction</span>
-<span style="font-style: italic;">    table is the name of the temp table and df is the pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = infer_pd_schema(dataframe)
-    conn.query(f<span style="font-style: italic;">'drop table if exists {table}'</span>)
-
-    <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''create TEMPORARY table if not exists {table}</span>
-<span style="font-style: italic;">    ({schema});'''</span>
-    logger.info(query)
-    conn.query(query)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">After testing, threads will not improve the uploading performance</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">600,000 records can be delivered within secs.</span>
-
-    <span style="font-weight: bold;">with</span> tempfile.NamedTemporaryFile() <span style="font-weight: bold;">as</span> tf:
-        <span style="font-weight: bold; font-style: italic;">name</span> = tf.name
-        logger.info(f<span style="font-style: italic;">'creating temp data file {name}'</span>)
-        dataframe.to_csv(name, header=<span style="font-weight: bold; text-decoration: underline;">True</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>)
-        <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''</span>
-<span style="font-style: italic;">        copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span>
-<span style="font-style: italic;">        '''</span>
-        <span style="font-weight: bold; font-style: italic;">rconn</span> = conn._conn.connection
-        <span style="font-weight: bold; font-style: italic;">cursor</span> = rconn.cursor()
-        <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(name, <span style="font-style: italic;">'r'</span>) <span style="font-weight: bold;">as</span> f:
-            cursor.copy_expert(query, f)
-        rconn.commit()
-    logger.info(<span style="font-style: italic;">'upload data done'</span>)
+<pre class="src src-bash">initdb pdatta
 </pre>
 </div>
 
 <p>
-当 <code>pandas</code> 的数据量很大比如几百万条记录时， <code>sql insert</code> 操作的性能往往不会很好。即便是使用多线程操作，性能的提升也是不明显。
-这里我采用了 <code>pgsql</code> 的 <code>copy</code> 命令， 很 <code>tricky</code> 的深入了 <code>records</code> 库的低层 <code>connection</code> 调用方法。 百万级的记录上传只需要秒级就可以完成。
-</p></li>
-
-<li><p>
-对 <code>pandas dataframe</code> 的临时表与数据库中已经有的表做联合操作
+这个时候会以 <code>ec2-user</code> 用户创建一个 <code>pdata</code> 的目录，里面会有生成 <code>postsql</code> 的默认配置。
+修改 <code>pdata</code> 目录下的两个文件 <code>postgresql.conf</code> 和 <code>pg_hba.conf</code> ， 第一个文件修改 <code>listernling port</code> 和 <code>bind ip</code> 改为 <code>0.0.0.0</code>,  
+第二个文件修改 <code>trust</code> 的 <code>ip</code>, 这样就可以从外部访问 <code>postgresql</code>.
 </p>
-<div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">query_pg_with_df</span>(table, dataframe, sql):
-    <span style="font-style: italic;">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span>
-<span style="font-style: italic;">    return a pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">pgdb</span> = records.Database(
-        <span style="font-style: italic;">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.<span style="font-weight: bold;">format</span>(
-            host=PG_SQL_HOST,
-            db=PG_SQL_NAME,
-            user=PG_SQL_USER,
-            pwd=PG_SQL_PASS)
-    )
 
-    <span style="font-weight: bold;">try</span>:
-        <span style="font-weight: bold;">with</span> pgdb.transaction() <span style="font-weight: bold;">as</span> conn:
-            create_temp_table_with_df(conn, table, dataframe)
-            logger.info(sql)
-            <span style="font-weight: bold; font-style: italic;">res</span> = conn.query(sql)
-            <span style="font-weight: bold;">return</span> pd.DataFrame(res.as_dict())
-    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">Exception</span> <span style="font-weight: bold;">as</span> e:
-        logger.error(e.msg)
-    <span style="font-weight: bold;">finally</span>:
-        pgdb.close()
+<div class="org-src-container">
+<pre class="src src-bash">pg_ctl start -D pdata -s -w -t 300
+</pre>
+</div>
+<p>
+如果需要停止服务可以运行
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">pg_ctl stop -D pdata -s -m fast
 </pre>
 </div>
 
 <p>
-这里函数中的 <code>table</code> 变量是指后面 <code>pandas dataframe</code> 上传至 <code>pgsql</code> 之后的临时表名。变量 <code>sql</code> 就可以操作这个临时表和数据库里面其他表做正常的类似 <code>join</code> 的操作。
-返回的结果是一个 <code>pandas dataframe</code> 。 这样就可以在内存中做后续进一步的处理了。
-</p></li>
-</ul>
-</div>
+创建 <code>clickhouse-fdw extension</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> EXTENSION clickhousedb_fdw;
+</pre>
 </div>
 
-<div id="outline-container-orgd70de58" class="outline-2">
-<h2 id="orgd70de58">总结</h2>
-<div class="outline-text-2" id="text-orgd70de58">
-<ul class="org-ul">
-<li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
-<li>提供了 <code>pandas dataframe</code> 如何与 <code>pgsql</code> 里的表做交互比如 <code>join</code> 等操作。</li>
-<li>可以根据实际采用的 <code>sql</code> 服务类型，修改此代码 <code>porting</code> 到 <code>mysql</code> 或者别的 <code>sql service</code> 。</li>
-</ul>
+<p>
+创建 <code>SERVER</code>, 这里需要指定 <code>clickhouse</code> 的地址为 <code>host</code>, 以及之前编译的 <code>clickhouseodbc.so</code> 地址作为 <code>driver</code> 的地址, <code>dbname</code> 也是 <code>clickhouse</code> 上的 =dbname=。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> SERVER clickhouse_svr <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">DATA</span> WRAPPER clickhousedb_fdw <span style="font-weight: bold;">OPTIONS</span>(dbname <span style="font-style: italic;">'test_db'</span>, driver <span style="font-style: italic;">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, <span style="font-weight: bold;">host</span> <span style="font-style: italic;">'172.31.37.147'</span>);
+</pre>
+</div>
+
+<p>
+创建user mapping
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">USER</span> MAPPING <span style="font-weight: bold;">FOR</span> <span style="font-weight: bold;">CURRENT_USER</span> SERVER clickhouse_svr;
+</pre>
+</div>
+
+<p>
+创建外表, 并且表名需要跟 <code>clickshouse</code> 的表名一致。 
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span>
+(
+     bbl int8,
+     owner_name text,
+     address text,
+     tax_class text,
+     tax_rate text,
+     emv <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     tbea <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     bav <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     tba text,
+     property_tax text,
+     condonumber text,
+     condo text,
+     insertion_date <span style="font-weight: bold; text-decoration: underline;">Time</span>
+ ) SERVER clickhouse_svr;
+</pre>
+</div>
+
+<p>
+查询数据
+<img src="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+</p>
 </div>
 </div>
 </div>
@@ -468,7 +524,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/" title="Python Pandas库如何优雅的与数据库交互">https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/</a>
+    <a href="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/" title="基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索">https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -479,11 +535,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/python/" rel="tag"># python</a>
-              <a href="/tags/pandas/" rel="tag"># pandas</a>
               <a href="/tags/pgsql/" rel="tag"># pgsql</a>
-              <a href="/tags/hive/" rel="tag"># hive</a>
-              <a href="/tags/presto/" rel="tag"># presto</a>
+              <a href="/tags/clickhouse/" rel="tag"># clickhouse</a>
           </div>
 
         
@@ -492,13 +545,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/15/postfix-dovecot-config/" rel="prev" title="基于postfix和dovecot搭建个人邮件服务器">
-      <i class="fa fa-chevron-left"></i> 基于postfix和dovecot搭建个人邮件服务器
+    <a href="/2020/03/18/python-pandas-pgsql-interaction/" rel="prev" title="Python Pandas库如何优雅的与数据库交互">
+      <i class="fa fa-chevron-left"></i> Python Pandas库如何优雅的与数据库交互
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/08/13/clickhouse-fdw-postgresql/" rel="next" title="基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索">
-      基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -559,7 +609,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org293e52b"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgb09cbb6"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd70de58"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org1ac56bc"><span class="nav-number">1.</span> <span class="nav-text">Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org5af3326"><span class="nav-number">1.1.</span> <span class="nav-text">编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgadf4c5e"><span class="nav-number">1.2.</span> <span class="nav-text">编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd4c1ab9"><span class="nav-number">2.</span> <span class="nav-text">配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

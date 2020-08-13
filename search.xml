@@ -1,6 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索</title>
+    <url>/2020/08/13/clickhouse-fdw-postgresql/</url>
+    <content><![CDATA[<div id="content">
+
+
+<div id="outline-container-org1ac56bc" class="outline-2">
+<h2 id="org1ac56bc">Conda环境下搭建Clickhouse-fdw</h2>
+<div class="outline-text-2" id="text-org1ac56bc">
+<p>
+由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
+原生 <code>CentOS</code> 的 <code>repo</code> 不能满足依赖，所以用选用 <code>Conda</code> 环境来解决依赖并 <code>build</code> 生成动态库。
+</p>
+
+
+<div class="org-center">
+<p>
+本质上 <code>Clickhouse-fdw</code> 是一个 <code>postgresql</code> 的 <code>extension</code> 动态库, 它与 <code>Clickhouse</code> 之间的连接是使用的 <code>Clickhouse-odbc</code> 库。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5af3326" class="outline-3">
+<h3 id="org5af3326">编译clickhouse-odbc</h3>
+<div class="outline-text-3" id="text-org5af3326">
+<ol class="org-ol">
+<li><p>
+递归拉取 <code>clichouse-odbc</code> 的 <code>source</code>, <code>--recursive</code> 可以把项目下的 <code>sub project</code> 一并拉下来。
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">git clone --recursive https@github.com:ClickHouse/clickhouse-odbc.git
+</pre>
+</div></li>
+<li><p>
+编译Clickhouse-odbc, README里面使用的是devtoolset-8 为了解决高版本的GCC的问题，我这里用的Conda的环境，需要用conda 安装gcc 7以及其他包括cmake 14+在内的依赖包.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="font-weight: bold;">cd</span> clickhouse-odbc
+mkdir build
+<span style="font-weight: bold;">cd</span> build
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span>
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+</pre>
+</div>
+<p>
+在第7部的时候会有报错，错误步骤是在编译 <code>gtest</code> 的测试 <code>binary</code>, 其实可以不用解决，因为在此错误之前 <code>libclickhouseodbc.so</code> 已经被编译出来了。
+</p>
+<blockquote>
+<p>
+(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
+    linux-vdso.so.1 (0x00007ffd111b4000)
+    libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f4fcd072000)
+    libstdc++.so.6 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libstdc++.so.6 (0x00007f4fcd616000)
+    libgcc<sub>s.so.1</sub> =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libgcc<sub>s.so.1</sub> (0x00007f4fcd602000)
+    libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f4fcccc7000)
+    librt.so.1 =&gt; /lib64/librt.so.1 (0x00007f4fccabf000)
+    libodbcinst.so.2 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libodbcinst.so.2 (0x00007f4fcc8a4000)
+    libicuuc.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libicuuc.so.58 (0x00007f4fcc6f1000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f4fcd573000)
+    libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f4fcc3b1000)
+    libdl.so.2 =&gt; <i>lib64/libdl.so.2 (0x00007f4fcc1ad000)
+    libicudata.so.58 =&gt; /home/ec2-user/miniconda3/envs/py3/lib</i>./libicudata.so.58 (0x00007f4fca8ab000)
+</p>
+</blockquote>
+<p>
+查看是否有找不到的动态库地址。
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgadf4c5e" class="outline-3">
+<h3 id="orgadf4c5e">编译clickhouse-fdw</h3>
+<div class="outline-text-3" id="text-orgadf4c5e">
+<p>
+<code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
+<code>Conda</code> 安装的 <code>postgresql</code> 没有写入 <code>systemctl</code>, 需要手动配置启动。
+<code>Conda</code> 安装的 <code>postgresql pg_config</code> 输出的系统变量里"CC"的指向路径是有问题的。
+</p>
+<blockquote>
+<p>
+pg<sub>config</sub> 
+….
+CC = /tmp/build/80754af9/postgresql-split<sub>1545233302450</sub>/<sub>build</sub><sub>env</sub>/bin/x86<sub>64</sub>-conda<sub>cos6</sub>-linux-gnu-cc
+</p>
+</blockquote>
+
+<p>
+这里 <code>CC</code> 是只编译 <code>postgresql</code> 的编译器路径，系统里根本没有这个，需要修改 <code>Makefile</code> 里面强制指向 <code>CC</code> 到系统的 <code>gcc</code> 编译器，否则会报错。
+</p>
+
+<blockquote>
+<p>
+(py3) [ec2-user@ip-172-31-46-209 clickhousedb<sub>fdw</sub>]$ make USE<sub>PGXS</sub>=1
+rm -rf libclickhouse-1.0.so lib/*.o
+make -f lib/Makefile
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+g++ -Wall -Wpointer-arith -O2 -fPIC -O0 -g3 -Wno-unused-variable -fPIC -Wall -I. -Ilib   -c -o lib/clickhouse-client.o lib/clickhouse-client.cpp
+g++ -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -pipe -I/home/ec2-user/miniconda3/envs/py3/include -fdebug-prefix-map==/usr/local/src/conda/- -fdebug-prefix-map==/usr/local/src/conda-prefix -fPIC lib/clickhouse-client.o -o libclickhouse-1.0.so -L/home/ec2-user/miniconda3/envs/py3/lib -L. -lclickhouse-1.0 -lodbc -lodbcinst -Wl,-O2 -Wl,–sort-common -Wl,–as-needed -Wl,-z,relro -Wl,-z,now -Wl,–disable-new-dtags -Wl,-rpath,/home/ec2-user/miniconda3/envs/py3/lib -L/home/ec2-user/miniconda3/envs/py3/lib  -L/home/ec2-user/miniconda3/envs/py3/lib -Wl,–as-needed -Wl,-rpath,'/home/ec2-user/miniconda3/envs/py3/lib',–disable-new-dtags -fPIC -shared -ldl -lstdc++ -L -lodbc
+make[1]: 放弃循环依赖 test &lt;- test 。
+g++ -O0 -g3 -Wno-unused-variable -Iinclude  lib/example/odbc<sub>test.o</sub> -o test -ldl -L. -lclickhouse-1.0 -lodbc -lodbcinst
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make -f lib/Makefile
+make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+make[1]: 放弃循环依赖 test &lt;- test 。
+make[1]: 对“all”无需做任何事。
+make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb<sub>fdw</sub>”
+/usr/bin/install -c -m 755 libclickhouse-1.0.so /home/ec2-user/miniconda3/envs/py3/lib/libclickhouse-1.0.so
+</p>
+</blockquote>
+<p>
+最后运行 <code>make USE_PGXS=1 install</code> 把对应的动态库放到制定位置。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgd4c1ab9" class="outline-2">
+<h2 id="orgd4c1ab9">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div class="outline-text-2" id="text-orgd4c1ab9">
+<p>
+先配置 <code>clickhouse</code> 表并导入数据
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> DATABASE test_database;
+
+USE test_database;
+
+<span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span> 
+(
+    bbl Int64,
+    owner_name String,
+    address String,
+    tax_class String,
+    tax_rate String,
+    emv Float64,
+    tbea Float64,
+    bav Float64,
+    tba String,
+    property_tax String,
+    condonumber String,
+    condo String,
+    insertion_date DateTime MATERIALIZED now() 
+)
+ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_class <span style="font-weight: bold;">ORDER</span> <span style="font-weight: bold;">BY</span> (owner_name)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bash">curl -X GET <span style="font-style: italic;">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  <span style="font-style: italic;">\</span>
+  | clickhouse-client --input_format_allow_errors_num=10 <span style="font-style: italic;">\</span>
+  --query=<span style="font-style: italic;">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span>
+</pre>
+</div>
+
+<p>
+配置启动 <code>postgresql</code>,首先要初始化 <code>postgresq</code> 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">initdb pdatta
+</pre>
+</div>
+
+<p>
+这个时候会以 <code>ec2-user</code> 用户创建一个 <code>pdata</code> 的目录，里面会有生成 <code>postsql</code> 的默认配置。
+修改 <code>pdata</code> 目录下的两个文件 <code>postgresql.conf</code> 和 <code>pg_hba.conf</code> ， 第一个文件修改 <code>listernling port</code> 和 <code>bind ip</code> 改为 <code>0.0.0.0</code>,  
+第二个文件修改 <code>trust</code> 的 <code>ip</code>, 这样就可以从外部访问 <code>postgresql</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">pg_ctl start -D pdata -s -w -t 300
+</pre>
+</div>
+<p>
+如果需要停止服务可以运行
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">pg_ctl stop -D pdata -s -m fast
+</pre>
+</div>
+
+<p>
+创建 <code>clickhouse-fdw extension</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> EXTENSION clickhousedb_fdw;
+</pre>
+</div>
+
+<p>
+创建 <code>SERVER</code>, 这里需要指定 <code>clickhouse</code> 的地址为 <code>host</code>, 以及之前编译的 <code>clickhouseodbc.so</code> 地址作为 <code>driver</code> 的地址, <code>dbname</code> 也是 <code>clickhouse</code> 上的 =dbname=。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> SERVER clickhouse_svr <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">DATA</span> WRAPPER clickhousedb_fdw <span style="font-weight: bold;">OPTIONS</span>(dbname <span style="font-style: italic;">'test_db'</span>, driver <span style="font-style: italic;">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, <span style="font-weight: bold;">host</span> <span style="font-style: italic;">'172.31.37.147'</span>);
+</pre>
+</div>
+
+<p>
+创建user mapping
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">USER</span> MAPPING <span style="font-weight: bold;">FOR</span> <span style="font-weight: bold;">CURRENT_USER</span> SERVER clickhouse_svr;
+</pre>
+</div>
+
+<p>
+创建外表, 并且表名需要跟 <code>clickshouse</code> 的表名一致。 
+</p>
+<div class="org-src-container">
+<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span>
+(
+     bbl int8,
+     owner_name text,
+     address text,
+     tax_class text,
+     tax_rate text,
+     emv <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     tbea <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     bav <span style="font-weight: bold; text-decoration: underline;">Float</span>,
+     tba text,
+     property_tax text,
+     condonumber text,
+     condo text,
+     insertion_date <span style="font-weight: bold; text-decoration: underline;">Time</span>
+ ) SERVER clickhouse_svr;
+</pre>
+</div>
+
+<p>
+查询数据
+<img src="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+</p>
+</div>
+</div>
+</div>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>]]></content>
+      <categories>
+        <category>bigdata</category>
+      </categories>
+      <tags>
+        <tag>pgsql</tag>
+        <tag>clickhouse</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python Pandas库如何优雅的与数据库交互</title>
     <url>/2020/03/18/python-pandas-pgsql-interaction/</url>
     <content><![CDATA[<div id="content">

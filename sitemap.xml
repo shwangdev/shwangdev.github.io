@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/</loc>
+    
+    <lastmod>2020-08-13T12:51:24.007Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/</loc>
     
     <lastmod>2020-06-06T06:46:43.367Z</lastmod>
