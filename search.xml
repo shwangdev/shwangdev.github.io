@@ -253,8 +253,8 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
         <category>bigdata</category>
       </categories>
       <tags>
-        <tag>pgsql</tag>
         <tag>clickhouse</tag>
+        <tag>pgsql</tag>
       </tags>
   </entry>
   <entry>
@@ -451,9 +451,9 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
         <category>bigdata</category>
       </categories>
       <tags>
+        <tag>pgsql</tag>
         <tag>python</tag>
         <tag>pandas</tag>
-        <tag>pgsql</tag>
         <tag>hive</tag>
         <tag>presto</tag>
       </tags>
