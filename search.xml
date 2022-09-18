@@ -210,27 +210,27 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga32e433">1. 准备工作</a></li>
-<li><a href="#orge1ae11e">2. 配置的详细过程</a>
+<li><a href="#org5e21f7b">1. 准备工作</a></li>
+<li><a href="#org5490441">2. 配置的详细过程</a>
 <ul>
-<li><a href="#org69c9bfe">2.1. 配置SSL证书</a>
+<li><a href="#orge64f828">2.1. 配置SSL证书</a>
 <ul>
-<li><a href="#org5e88742">2.1.1. 生成私有证书</a></li>
+<li><a href="#org4a7a8b7">2.1.1. 生成私有证书</a></li>
 </ul>
 </li>
-<li><a href="#org2229540">2.2. 配置Postfix</a></li>
-<li><a href="#orge412bf6">2.3. 配置Dovecot</a></li>
-<li><a href="#org01956e5">2.4. 生效配置，重启服务</a></li>
-<li><a href="#orgaf9410a">2.5. 确认以及配置防火墙</a></li>
+<li><a href="#org940ff20">2.2. 配置Postfix</a></li>
+<li><a href="#org555479b">2.3. 配置Dovecot</a></li>
+<li><a href="#org905c6f0">2.4. 生效配置，重启服务</a></li>
+<li><a href="#org635bb35">2.5. 确认以及配置防火墙</a></li>
 </ul>
 </li>
-<li><a href="#org8b2d795">3. 测试功能</a></li>
+<li><a href="#org6825f26">3. 测试功能</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga32e433" class="outline-2">
-<h2 id="orga32e433"><span class="section-number-2">1</span> 准备工作</h2>
+<div id="outline-container-org5e21f7b" class="outline-2">
+<h2 id="org5e21f7b"><span class="section-number-2">1</span> 准备工作</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
@@ -239,12 +239,12 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 <li>在你的域名供应商的平台上配置好你的域名解析。
 一般情况下，需要配置3种域名解析类型， 分别是 <code>A</code>, <code>MX</code>, <code>TXT</code>
 下面是我的配置, 我用的是阿里云的域名服务：
-<img src="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png" alt="domain_configure.png"></li>
+[[<img src="./images/domain_configure.png" alt="domain_configure.png">]]</li>
 <li><p>
 在 <code>VPS</code> 上安装好 <code>postfix</code> ， <code>dovecot</code> ， <code>sasl-dev</code> 等软件。
 <code>libsasl</code> 是 <code>postfix</code> 和 <code>dovecot</code> 认证用的。你需要根据你的 <code>VPS</code> 操作系统的类型选择对应的包管理工具安装这些包。
 </p>
-<pre class="example" id="org639e97c">postfix-2.10.1-7.el7.x86_64
+<pre class="example" id="orgd61eaf3">postfix-2.10.1-7.el7.x86_64
 dovecot-2.2.36-3.el7_7.1.x86_64
 dovecot-mysql-2.2.36-3.el7_7.1.x86_64
 cyrus-sasl-lib-2.1.26-23.el7.x86_64
@@ -258,16 +258,16 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-orge1ae11e" class="outline-2">
-<h2 id="orge1ae11e"><span class="section-number-2">2</span> 配置的详细过程</h2>
+<div id="outline-container-org5490441" class="outline-2">
+<h2 id="org5490441"><span class="section-number-2">2</span> 配置的详细过程</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org69c9bfe" class="outline-3">
-<h3 id="org69c9bfe"><span class="section-number-3">2.1</span> 配置SSL证书</h3>
+<div id="outline-container-orge64f828" class="outline-3">
+<h3 id="orge64f828"><span class="section-number-3">2.1</span> 配置SSL证书</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org5e88742" class="outline-4">
-<h4 id="org5e88742"><span class="section-number-4">2.1.1</span> 生成私有证书</h4>
+<div id="outline-container-org4a7a8b7" class="outline-4">
+<h4 id="org4a7a8b7"><span class="section-number-4">2.1.1</span> 生成私有证书</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
@@ -296,15 +296,15 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org2229540" class="outline-3">
-<h3 id="org2229540"><span class="section-number-3">2.2</span> 配置Postfix</h3>
+<div id="outline-container-org940ff20" class="outline-3">
+<h3 id="org940ff20"><span class="section-number-3">2.2</span> 配置Postfix</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
 </p>
 
-<pre class="example" id="orgfc435c6">myhostname = xxxxx.com 
+<pre class="example" id="org5e06dfd">myhostname = xxxxx.com
 mydomain = xxxx.com
 smtpd_use_tls = yes
 smtp_tls_mandatory_protocols = !SSLv2, !SSLv3
@@ -328,7 +328,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example" id="org5fd21e3">@domainname   xxxxx.gmail.com
+<pre class="example" id="orge8374cb">@domainname   xxxxx.gmail.com
 </pre>
 
 <p>
@@ -340,7 +340,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example" id="orgf366e1d">[smtp.gmail.com]:587    account@gmail.com:password
+<pre class="example" id="orgd06085d">[smtp.gmail.com]:587    account@gmail.com:password
 </pre>
 
 <p>
@@ -348,49 +348,49 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 <code>account</code> 和 <code>password</code> 替换为你真实的用户名和密码。
 </p></li>
 <li>编辑 <code>/etc/postfix/master.cf</code> 文件。
-<img src="http://shwang.ink:4800/images/postfix-dovecot-config/mastercf.png" alt="mastercf.png"></li>
+[[<img src="./images/mastercf.png" alt="mastercf.png">]]</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge412bf6" class="outline-3">
-<h3 id="orge412bf6"><span class="section-number-3">2.3</span> 配置Dovecot</h3>
+<div id="outline-container-org555479b" class="outline-3">
+<h3 id="org555479b"><span class="section-number-3">2.3</span> 配置Dovecot</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
 </p>
-<pre class="example" id="orgbbb9d0d">protocols = imap pop3
+<pre class="example" id="org4bd2a2f">protocols = imap pop3
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-auth.conf</code> ，确认以下配置：
 </p>
-<pre class="example" id="org20d2467">disable_plaintext_auth = no
+<pre class="example" id="orgaf3df7f">disable_plaintext_auth = no
 auth_mechanisms = plain login
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-ssl.conf</code>, 确认开启了 <code>ssl</code> 以及使用了正确的证书：
 </p>
-<pre class="example" id="org8eb9e8b">ssl = yes
+<pre class="example" id="org0ae08e9">ssl = yes
 ssl_cert = </pre></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org01956e5" class="outline-3">
-<h3 id="org01956e5"><span class="section-number-3">2.4</span> 生效配置，重启服务</h3>
+<div id="outline-container-org905c6f0" class="outline-3">
+<h3 id="org905c6f0"><span class="section-number-3">2.4</span> 生效配置，重启服务</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
 </p>
 <div class="org-src-container">
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo postmap /etc/postfix/sasl_passwd</span><br><span class="line">sudo postmap  /etc/postfix/generic  </span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo postmap /etc/postfix/sasl_passwd</span><br><span class="line">sudo postmap  /etc/postfix/generic</span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 重启 <code>postfix=， =dovecot</code> 服务
 </p>
 <div class="org-src-container">
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl restart postfix</span><br><span class="line">sudo systemctl restart dovecot        </span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl restart postfix</span><br><span class="line">sudo systemctl restart dovecot</span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 开机启动 <code>postfix</code>, <code>dovecot</code> 服务
@@ -402,8 +402,8 @@ ssl_cert = </pre></li>
 </div>
 </div>
 
-<div id="outline-container-orgaf9410a" class="outline-3">
-<h3 id="orgaf9410a"><span class="section-number-3">2.5</span> 确认以及配置防火墙</h3>
+<div id="outline-container-org635bb35" class="outline-3">
+<h3 id="org635bb35"><span class="section-number-3">2.5</span> 确认以及配置防火墙</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
@@ -462,8 +462,8 @@ ssl_cert = </pre></li>
 </div>
 </div>
 
-<div id="outline-container-org8b2d795" class="outline-2">
-<h2 id="org8b2d795"><span class="section-number-2">3</span> 测试功能</h2>
+<div id="outline-container-org6825f26" class="outline-2">
+<h2 id="org6825f26"><span class="section-number-2">3</span> 测试功能</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
@@ -481,7 +481,7 @@ ssl_cert = </pre></li>
 <p>
 返回 <code>ssl</code> 协商的结果
 </p>
-<pre class="example" id="orgba90b28">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+<pre class="example" id="orgfefde15">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
 Server public key is 4096 bit
 Secure Renegotiation IS supported
 Compression: NONE
@@ -513,7 +513,7 @@ SSL-Session:
 <figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="operator">-ne</span> <span class="string">"\0account\0password"</span> | base64</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example" id="org754480c">220 machineheart.tech ESMTP Postfix
+<pre class="example" id="orgde3f37c">220 machineheart.tech ESMTP Postfix
 AUTH LOGIN PLAIN AGFjY291bnQAcGFzc3dvcmQ=
 501 5.5.4 Syntax: AUTH mechanism
 AUTH LOGIN
@@ -530,7 +530,7 @@ AUTH LOGIN
 <figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl s_client -connect mail.example.com:<span class="number">993</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example" id="orgb8f90b2"> *tag login account password*
+<pre class="example" id="org389dd27"> *tag login account password*
  tag OK [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES 
  THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED 
  I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE 
@@ -547,7 +547,7 @@ tag OK List completed (0.001 + 0.000 secs).
 </div>
 
 <p class="date">Date: 2020-03-15</p>
-<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="date">Created: 2022-09-19 Mon 00:22</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 ]]></content>
       <categories>
@@ -566,15 +566,15 @@ tag OK List completed (0.001 + 0.000 secs).
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge02849f">1. 问题描述</a></li>
-<li><a href="#orga2e841d">2. 解决方案</a></li>
-<li><a href="#org399fe2c">3. 总结</a></li>
+<li><a href="#org103ebba">1. 问题描述</a></li>
+<li><a href="#org96155ff">2. 解决方案</a></li>
+<li><a href="#org49e3407">3. 总结</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge02849f" class="outline-2">
-<h2 id="orge02849f"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-org103ebba" class="outline-2">
+<h2 id="org103ebba"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
@@ -604,8 +604,8 @@ tag OK List completed (0.001 + 0.000 secs).
 </div>
 </div>
 
-<div id="outline-container-orga2e841d" class="outline-2">
-<h2 id="orga2e841d"><span class="section-number-2">2</span> 解决方案</h2>
+<div id="outline-container-org96155ff" class="outline-2">
+<h2 id="org96155ff"><span class="section-number-2">2</span> 解决方案</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
@@ -616,18 +616,16 @@ tag OK List completed (0.001 + 0.000 secs).
 所以这里推荐我常用的数据库连接库 <a href="https://github.com/kennethreitz-archive/records" target="_blank" rel="noopener">records</a>
 </p>
 
-
-<div id="orge5fd9bc" class="figure">
-<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg" alt="records.jpg">
+<p>
+[[<img src="./images/records.jpg" alt="records.jpg">]]
 </p>
-</div>
 
 <ul class="org-ul">
 <li><p>
 动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
 </p>
 <div class="org-src-container">
-<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span>}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span></span><br><span class="line">	}</span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -662,8 +660,8 @@ tag OK List completed (0.001 + 0.000 secs).
 </div>
 </div>
 
-<div id="outline-container-org399fe2c" class="outline-2">
-<h2 id="org399fe2c"><span class="section-number-2">3</span> 总结</h2>
+<div id="outline-container-org49e3407" class="outline-2">
+<h2 id="org49e3407"><span class="section-number-2">3</span> 总结</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
@@ -674,7 +672,7 @@ tag OK List completed (0.001 + 0.000 secs).
 </div>
 
 <p class="date">Date: 2020-03-18</p>
-<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="date">Created: 2022-09-19 Mon 00:22</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 ]]></content>
       <categories>

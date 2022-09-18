@@ -26,9 +26,9 @@
 <meta property="og:url" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/index.html">
 <meta property="og:site_name" content="Shawn&#96;s Blog">
 <meta property="og:description" content="Table of Contents   1. 问题描述 2. 解决方案 3. 总结      1 问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段">
-<meta property="og:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
+<meta property="og:image" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/images/records.jpg">
 <meta property="article:published_time" content="2020-03-18T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-06T06:46:43.367Z">
+<meta property="article:modified_time" content="2022-09-18T16:22:08.535Z">
 <meta property="article:author" content="Shawn Wang">
 <meta property="article:tag" content="pgsql">
 <meta property="article:tag" content="python">
@@ -36,7 +36,7 @@
 <meta property="article:tag" content="hive">
 <meta property="article:tag" content="presto">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
+<meta name="twitter:image" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/images/records.jpg">
 
 <link rel="canonical" href="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/">
 
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-06-06 14:46:43" itemprop="dateModified" datetime="2020-06-06T14:46:43+08:00">2020-06-06</time>
+                <time title="Modified: 2022-09-19 00:22:08" itemprop="dateModified" datetime="2022-09-19T00:22:08+08:00">2022-09-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,15 +260,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge02849f">1. 问题描述</a></li>
-<li><a href="#orga2e841d">2. 解决方案</a></li>
-<li><a href="#org399fe2c">3. 总结</a></li>
+<li><a href="#org103ebba">1. 问题描述</a></li>
+<li><a href="#org96155ff">2. 解决方案</a></li>
+<li><a href="#org49e3407">3. 总结</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge02849f" class="outline-2">
-<h2 id="orge02849f"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-org103ebba" class="outline-2">
+<h2 id="org103ebba"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
@@ -298,8 +298,8 @@
 </div>
 </div>
 
-<div id="outline-container-orga2e841d" class="outline-2">
-<h2 id="orga2e841d"><span class="section-number-2">2</span> 解决方案</h2>
+<div id="outline-container-org96155ff" class="outline-2">
+<h2 id="org96155ff"><span class="section-number-2">2</span> 解决方案</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
@@ -310,18 +310,16 @@
 所以这里推荐我常用的数据库连接库 <a href="https://github.com/kennethreitz-archive/records" target="_blank" rel="noopener">records</a>
 </p>
 
-
-<div id="orge5fd9bc" class="figure">
-<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg" alt="records.jpg">
+<p>
+[[<img src="./images/records.jpg" alt="records.jpg">]]
 </p>
-</div>
 
 <ul class="org-ul">
 <li><p>
 动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
 </p>
 <div class="org-src-container">
-<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span>}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span></span><br><span class="line">	}</span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -356,8 +354,8 @@
 </div>
 </div>
 
-<div id="outline-container-org399fe2c" class="outline-2">
-<h2 id="org399fe2c"><span class="section-number-2">3</span> 总结</h2>
+<div id="outline-container-org49e3407" class="outline-2">
+<h2 id="org49e3407"><span class="section-number-2">3</span> 总结</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
@@ -368,7 +366,7 @@
 </div>
 
 <p class="date">Date: 2020-03-18</p>
-<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="date">Created: 2022-09-19 Mon 00:22</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 
     </div>
@@ -474,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orge02849f"><span class="nav-number">2.</span> <span class="nav-text">1 问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orga2e841d"><span class="nav-number">3.</span> <span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org399fe2c"><span class="nav-number">4.</span> <span class="nav-text">3 总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org103ebba"><span class="nav-number">2.</span> <span class="nav-text">1 问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org96155ff"><span class="nav-number">3.</span> <span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org49e3407"><span class="nav-number">4.</span> <span class="nav-text">3 总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
