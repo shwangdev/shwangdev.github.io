@@ -482,7 +482,7 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-19 00:22:08" itemprop="dateModified" datetime="2022-09-19T00:22:08+08:00">2022-09-19</time>
+                <time title="Modified: 2022-09-19 00:26:59" itemprop="dateModified" datetime="2022-09-19T00:26:59+08:00">2022-09-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -527,15 +527,15 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org103ebba">1. 问题描述</a></li>
-<li><a href="#org96155ff">2. 解决方案</a></li>
-<li><a href="#org49e3407">3. 总结</a></li>
+<li><a href="#orgd6ce3ae">1. 问题描述</a></li>
+<li><a href="#org2369106">2. 解决方案</a></li>
+<li><a href="#org0e1424c">3. 总结</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org103ebba" class="outline-2">
-<h2 id="org103ebba"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-orgd6ce3ae" class="outline-2">
+<h2 id="orgd6ce3ae"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
@@ -565,8 +565,8 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 </div>
 </div>
 
-<div id="outline-container-org96155ff" class="outline-2">
-<h2 id="org96155ff"><span class="section-number-2">2</span> 解决方案</h2>
+<div id="outline-container-org2369106" class="outline-2">
+<h2 id="org2369106"><span class="section-number-2">2</span> 解决方案</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
@@ -577,9 +577,11 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 所以这里推荐我常用的数据库连接库 <a href="https://github.com/kennethreitz-archive/records" target="_blank" rel="noopener">records</a>
 </p>
 
-<p>
-[[<img src="./images/records.jpg" alt="records.jpg">]]
+
+<div id="orgbd8a79e" class="figure">
+<p><img src="./images/records.jpg" alt="records.jpg">
 </p>
+</div>
 
 <ul class="org-ul">
 <li><p>
@@ -621,8 +623,8 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 </div>
 </div>
 
-<div id="outline-container-org49e3407" class="outline-2">
-<h2 id="org49e3407"><span class="section-number-2">3</span> 总结</h2>
+<div id="outline-container-org0e1424c" class="outline-2">
+<h2 id="org0e1424c"><span class="section-number-2">3</span> 总结</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
@@ -633,7 +635,7 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 </div>
 
 <p class="date">Date: 2020-03-18</p>
-<p class="date">Created: 2022-09-19 Mon 00:22</p>
+<p class="date">Created: 2022-09-19 Mon 00:27</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 
       
@@ -685,7 +687,7 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-19 00:21:31" itemprop="dateModified" datetime="2022-09-19T00:21:31+08:00">2022-09-19</time>
+                <time title="Modified: 2022-09-19 00:26:45" itemprop="dateModified" datetime="2022-09-19T00:26:45+08:00">2022-09-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -726,27 +728,27 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5e21f7b">1. 准备工作</a></li>
-<li><a href="#org5490441">2. 配置的详细过程</a>
+<li><a href="#orga01f103">1. 准备工作</a></li>
+<li><a href="#org88389f1">2. 配置的详细过程</a>
 <ul>
-<li><a href="#orge64f828">2.1. 配置SSL证书</a>
+<li><a href="#org9763a28">2.1. 配置SSL证书</a>
 <ul>
-<li><a href="#org4a7a8b7">2.1.1. 生成私有证书</a></li>
+<li><a href="#orga232d82">2.1.1. 生成私有证书</a></li>
 </ul>
 </li>
-<li><a href="#org940ff20">2.2. 配置Postfix</a></li>
-<li><a href="#org555479b">2.3. 配置Dovecot</a></li>
-<li><a href="#org905c6f0">2.4. 生效配置，重启服务</a></li>
-<li><a href="#org635bb35">2.5. 确认以及配置防火墙</a></li>
+<li><a href="#org5243f99">2.2. 配置Postfix</a></li>
+<li><a href="#org41a1158">2.3. 配置Dovecot</a></li>
+<li><a href="#org8320dcd">2.4. 生效配置，重启服务</a></li>
+<li><a href="#org306d029">2.5. 确认以及配置防火墙</a></li>
 </ul>
 </li>
-<li><a href="#org6825f26">3. 测试功能</a></li>
+<li><a href="#orgfd0c6e4">3. 测试功能</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5e21f7b" class="outline-2">
-<h2 id="org5e21f7b"><span class="section-number-2">1</span> 准备工作</h2>
+<div id="outline-container-orga01f103" class="outline-2">
+<h2 id="orga01f103"><span class="section-number-2">1</span> 准备工作</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
@@ -755,12 +757,13 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 <li>在你的域名供应商的平台上配置好你的域名解析。
 一般情况下，需要配置3种域名解析类型， 分别是 <code>A</code>, <code>MX</code>, <code>TXT</code>
 下面是我的配置, 我用的是阿里云的域名服务：
-[[<img src="./images/domain_configure.png" alt="domain_configure.png">]]</li>
+<img src="./images/domain_configure.png" alt="domain_configure.png"></li>
+
 <li><p>
 在 <code>VPS</code> 上安装好 <code>postfix</code> ， <code>dovecot</code> ， <code>sasl-dev</code> 等软件。
 <code>libsasl</code> 是 <code>postfix</code> 和 <code>dovecot</code> 认证用的。你需要根据你的 <code>VPS</code> 操作系统的类型选择对应的包管理工具安装这些包。
 </p>
-<pre class="example" id="orgd61eaf3">postfix-2.10.1-7.el7.x86_64
+<pre class="example" id="org6b48fd5">postfix-2.10.1-7.el7.x86_64
 dovecot-2.2.36-3.el7_7.1.x86_64
 dovecot-mysql-2.2.36-3.el7_7.1.x86_64
 cyrus-sasl-lib-2.1.26-23.el7.x86_64
@@ -774,16 +777,16 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org5490441" class="outline-2">
-<h2 id="org5490441"><span class="section-number-2">2</span> 配置的详细过程</h2>
+<div id="outline-container-org88389f1" class="outline-2">
+<h2 id="org88389f1"><span class="section-number-2">2</span> 配置的详细过程</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge64f828" class="outline-3">
-<h3 id="orge64f828"><span class="section-number-3">2.1</span> 配置SSL证书</h3>
+<div id="outline-container-org9763a28" class="outline-3">
+<h3 id="org9763a28"><span class="section-number-3">2.1</span> 配置SSL证书</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org4a7a8b7" class="outline-4">
-<h4 id="org4a7a8b7"><span class="section-number-4">2.1.1</span> 生成私有证书</h4>
+<div id="outline-container-orga232d82" class="outline-4">
+<h4 id="orga232d82"><span class="section-number-4">2.1.1</span> 生成私有证书</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
@@ -812,15 +815,15 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org940ff20" class="outline-3">
-<h3 id="org940ff20"><span class="section-number-3">2.2</span> 配置Postfix</h3>
+<div id="outline-container-org5243f99" class="outline-3">
+<h3 id="org5243f99"><span class="section-number-3">2.2</span> 配置Postfix</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
 </p>
 
-<pre class="example" id="org5e06dfd">myhostname = xxxxx.com
+<pre class="example" id="org1037346">myhostname = xxxxx.com
 mydomain = xxxx.com
 smtpd_use_tls = yes
 smtp_tls_mandatory_protocols = !SSLv2, !SSLv3
@@ -844,7 +847,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example" id="orge8374cb">@domainname   xxxxx.gmail.com
+<pre class="example" id="org655e1cb">@domainname   xxxxx.gmail.com
 </pre>
 
 <p>
@@ -856,7 +859,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example" id="orgd06085d">[smtp.gmail.com]:587    account@gmail.com:password
+<pre class="example" id="org10d85d8">[smtp.gmail.com]:587    account@gmail.com:password
 </pre>
 
 <p>
@@ -864,36 +867,36 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 <code>account</code> 和 <code>password</code> 替换为你真实的用户名和密码。
 </p></li>
 <li>编辑 <code>/etc/postfix/master.cf</code> 文件。
-[[<img src="./images/mastercf.png" alt="mastercf.png">]]</li>
+<img src="./images/mastercf.png" alt="mastercf.png"></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org555479b" class="outline-3">
-<h3 id="org555479b"><span class="section-number-3">2.3</span> 配置Dovecot</h3>
+<div id="outline-container-org41a1158" class="outline-3">
+<h3 id="org41a1158"><span class="section-number-3">2.3</span> 配置Dovecot</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
 </p>
-<pre class="example" id="org4bd2a2f">protocols = imap pop3
+<pre class="example" id="org8bbf872">protocols = imap pop3
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-auth.conf</code> ，确认以下配置：
 </p>
-<pre class="example" id="orgaf3df7f">disable_plaintext_auth = no
+<pre class="example" id="org90769cd">disable_plaintext_auth = no
 auth_mechanisms = plain login
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-ssl.conf</code>, 确认开启了 <code>ssl</code> 以及使用了正确的证书：
 </p>
-<pre class="example" id="org0ae08e9">ssl = yes
+<pre class="example" id="orgd6e9542">ssl = yes
 ssl_cert = </pre></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org905c6f0" class="outline-3">
-<h3 id="org905c6f0"><span class="section-number-3">2.4</span> 生效配置，重启服务</h3>
+<div id="outline-container-org8320dcd" class="outline-3">
+<h3 id="org8320dcd"><span class="section-number-3">2.4</span> 生效配置，重启服务</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li><p>
@@ -918,8 +921,8 @@ ssl_cert = </pre></li>
 </div>
 </div>
 
-<div id="outline-container-org635bb35" class="outline-3">
-<h3 id="org635bb35"><span class="section-number-3">2.5</span> 确认以及配置防火墙</h3>
+<div id="outline-container-org306d029" class="outline-3">
+<h3 id="org306d029"><span class="section-number-3">2.5</span> 确认以及配置防火墙</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
@@ -978,8 +981,8 @@ ssl_cert = </pre></li>
 </div>
 </div>
 
-<div id="outline-container-org6825f26" class="outline-2">
-<h2 id="org6825f26"><span class="section-number-2">3</span> 测试功能</h2>
+<div id="outline-container-orgfd0c6e4" class="outline-2">
+<h2 id="orgfd0c6e4"><span class="section-number-2">3</span> 测试功能</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
@@ -997,7 +1000,7 @@ ssl_cert = </pre></li>
 <p>
 返回 <code>ssl</code> 协商的结果
 </p>
-<pre class="example" id="orgfefde15">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+<pre class="example" id="orgf51787e">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
 Server public key is 4096 bit
 Secure Renegotiation IS supported
 Compression: NONE
@@ -1029,7 +1032,7 @@ SSL-Session:
 <figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="operator">-ne</span> <span class="string">"\0account\0password"</span> | base64</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example" id="orgde3f37c">220 machineheart.tech ESMTP Postfix
+<pre class="example" id="org64daedb">220 machineheart.tech ESMTP Postfix
 AUTH LOGIN PLAIN AGFjY291bnQAcGFzc3dvcmQ=
 501 5.5.4 Syntax: AUTH mechanism
 AUTH LOGIN
@@ -1046,7 +1049,7 @@ AUTH LOGIN
 <figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl s_client -connect mail.example.com:<span class="number">993</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example" id="org389dd27"> *tag login account password*
+<pre class="example" id="org55fefb1"> *tag login account password*
  tag OK [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES 
  THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED 
  I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE 
@@ -1063,7 +1066,7 @@ tag OK List completed (0.001 + 0.000 secs).
 </div>
 
 <p class="date">Date: 2020-03-15</p>
-<p class="date">Created: 2022-09-19 Mon 00:22</p>
+<p class="date">Created: 2022-09-19 Mon 00:28</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 
       
