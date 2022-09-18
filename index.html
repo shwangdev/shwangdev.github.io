@@ -71,6 +71,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -194,10 +196,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-08-13 08:00:00 / Modified: 20:56:13" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
+              <time title="Created: 2020-08-13 08:00:00" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-09-19 00:12:07" itemprop="dateModified" datetime="2022-09-19T00:12:07+08:00">2022-09-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -214,7 +222,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.2k</span>
+              <span>5.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -233,12 +241,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <div id="content">
+          <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6eed4b1">1. Conda环境下搭建Clickhouse-fdw</a>
+<ul>
+<li><a href="#org2f7c743">1.1. 编译clickhouse-odbc</a></li>
+<li><a href="#org8499aa0">1.2. 编译clickhouse-fdw</a></li>
+</ul>
+</li>
+<li><a href="#org7b31c57">2. 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></a></li>
+</ul>
+</div>
+</div>
 
 
-<div id="outline-container-orgd7e29ae" class="outline-2">
-<h2 id="orgd7e29ae">Conda环境下搭建Clickhouse-fdw</h2>
-<div class="outline-text-2" id="text-orgd7e29ae">
+<div id="outline-container-org6eed4b1" class="outline-2">
+<h2 id="org6eed4b1"><span class="section-number-2">1</span> Conda环境下搭建Clickhouse-fdw</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
 原生 <code>CentOS</code> 的 <code>repo</code> 不能满足依赖，所以用选用 <code>Conda</code> 环境来解决依赖并 <code>build</code> 生成动态库。
@@ -252,32 +273,26 @@
 </div>
 </div>
 
-<div id="outline-container-orga2a2c46" class="outline-3">
-<h3 id="orga2a2c46">编译clickhouse-odbc</h3>
-<div class="outline-text-3" id="text-orga2a2c46">
+<div id="outline-container-org2f7c743" class="outline-3">
+<h3 id="org2f7c743"><span class="section-number-3">1.1</span> 编译clickhouse-odbc</h3>
+<div class="outline-text-3" id="text-1-1">
 <ol class="org-ol">
 <li><p>
 递归拉取 <code>clichouse-odbc</code> 的 <code>source</code>, <code>--recursive</code> 可以把项目下的 <code>sub project</code> 一并拉下来。
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">git clone --recursive https@github.com:ClickHouse/clickhouse-odbc.git
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --recursive https@github.com:ClickHouse/clickhouse-odbc.git</span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 编译Clickhouse-odbc, README里面使用的是devtoolset-8 为了解决高版本的GCC的问题，我这里用的Conda的环境，需要用conda 安装gcc 7以及其他包括cmake 14+在内的依赖包.
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="font-weight: bold;">cd</span> clickhouse-odbc
-mkdir build
-<span style="font-weight: bold;">cd</span> build
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span>
-cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> clickhouse-odbc</span><br><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"><span class="comment"># Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span></span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..</span><br></pre></td></tr></tbody></table></figure>
 </div>
 <p>
 在第7部的时候会有报错，错误步骤是在编译 <code>gtest</code> 的测试 <code>binary</code>, 其实可以不用解决，因为在此错误之前 <code>libclickhouseodbc.so</code> 已经被编译出来了。
 </p>
-<pre class="example">(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
+<pre class="example" id="orgbbf944b">(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
     linux-vdso.so.1 (0x00007ffd111b4000)
     libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f4fcd072000)
     libstdc++.so.6 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libstdc++.so.6 (0x00007f4fcd616000)
@@ -298,15 +313,15 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 </div>
 </div>
 
-<div id="outline-container-orgd4470fa" class="outline-3">
-<h3 id="orgd4470fa">编译clickhouse-fdw</h3>
-<div class="outline-text-3" id="text-orgd4470fa">
+<div id="outline-container-org8499aa0" class="outline-3">
+<h3 id="org8499aa0"><span class="section-number-3">1.2</span> 编译clickhouse-fdw</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 <code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
 <code>Conda</code> 安装的 <code>postgresql</code> 没有写入 <code>systemctl</code>, 需要手动配置启动。
 <code>Conda</code> 安装的 <code>postgresql pg_config</code> 输出的系统变量里"CC"的指向路径是有问题的。
 </p>
-<pre class="example">pg_config 
+<pre class="example" id="org83d1716">pg_config
 ....
 CC = /tmp/build/80754af9/postgresql-split_1545233302450/_build_env/bin/x86_64-conda_cos6-linux-gnu-cc
 </pre>
@@ -315,7 +330,7 @@ CC = /tmp/build/80754af9/postgresql-split_1545233302450/_build_env/bin/x86_64-co
 这里 <code>CC</code> 是只编译 <code>postgresql</code> 的编译器路径，系统里根本没有这个，需要修改 <code>Makefile</code> 里面强制指向 <code>CC</code> 到系统的 <code>gcc</code> 编译器，否则会报错。
 </p>
 
-<pre class="example">(py3) [ec2-user@ip-172-31-46-209 clickhousedb_fdw]$ make USE_PGXS=1
+<pre class="example" id="orgae1bc3b">(py3) [ec2-user@ip-172-31-46-209 clickhousedb_fdw]$ make USE_PGXS=1
 rm -rf libclickhouse-1.0.so lib/*.o
 make -f lib/Makefile
 make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
@@ -339,42 +354,18 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 </div>
 
 
-<div id="outline-container-org13d7552" class="outline-2">
-<h2 id="org13d7552">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
-<div class="outline-text-2" id="text-org13d7552">
+<div id="outline-container-org7b31c57" class="outline-2">
+<h2 id="org7b31c57"><span class="section-number-2">2</span> 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div class="outline-text-2" id="text-2">
 <p>
 先配置 <code>clickhouse</code> 表并导入数据
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> DATABASE test_database;
-
-USE test_database;
-
-<span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span> 
-(
-    bbl Int64,
-    owner_name String,
-    address String,
-    tax_class String,
-    tax_rate String,
-    emv Float64,
-    tbea Float64,
-    bav Float64,
-    tba String,
-    property_tax String,
-    condonumber String,
-    condo String,
-    insertion_date DateTime MATERIALIZED now() 
-)
-ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_class <span style="font-weight: bold;">ORDER</span> <span style="font-weight: bold;">BY</span> (owner_name)
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> test_database;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> test_database;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tax_bills_nyc</span><br><span class="line">(</span><br><span class="line">    bbl Int64,</span><br><span class="line">    owner_name <span class="keyword">String</span>,</span><br><span class="line">    address <span class="keyword">String</span>,</span><br><span class="line">    tax_class <span class="keyword">String</span>,</span><br><span class="line">    tax_rate <span class="keyword">String</span>,</span><br><span class="line">    emv Float64,</span><br><span class="line">    tbea Float64,</span><br><span class="line">    bav Float64,</span><br><span class="line">    tba <span class="keyword">String</span>,</span><br><span class="line">    property_tax <span class="keyword">String</span>,</span><br><span class="line">    condonumber <span class="keyword">String</span>,</span><br><span class="line">    condo <span class="keyword">String</span>,</span><br><span class="line">    insertion_date DateTime <span class="keyword">MATERIALIZED</span> <span class="keyword">now</span>() </span><br><span class="line">)</span><br><span class="line"><span class="keyword">ENGINE</span> = MergeTree <span class="keyword">PARTITION</span> <span class="keyword">BY</span> tax_class <span class="keyword">ORDER</span> <span class="keyword">BY</span> (owner_name)</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X GET <span style="font-style: italic;">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  <span style="font-style: italic;">\</span>
-  | clickhouse-client --input_format_allow_errors_num=10 <span style="font-style: italic;">\</span>
-  --query=<span style="font-style: italic;">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span>
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">curl -X GET <span class="string">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  \</span><br><span class="line">  | clickhouse-client --input_format_allow_errors_num=<span class="number">10</span> \</span><br><span class="line">  --query=<span class="string">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -382,8 +373,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">initdb pdatta
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">initdb pdatta</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -393,24 +383,21 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">pg_ctl start -D pdata -s -w -t 300
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">pg_ctl start -D pdata <span class="operator">-s</span> -w -t <span class="number">300</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 <p>
 如果需要停止服务可以运行
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">pg_ctl stop -D pdata -s -m fast
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">pg_ctl stop -D pdata <span class="operator">-s</span> -m fast</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建 <code>clickhouse-fdw extension</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> EXTENSION clickhousedb_fdw;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> EXTENSION clickhousedb_fdw;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -418,67 +405,34 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> SERVER clickhouse_svr <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">DATA</span> WRAPPER clickhousedb_fdw <span style="font-weight: bold;">OPTIONS</span>(dbname <span style="font-style: italic;">'test_db'</span>, driver <span style="font-style: italic;">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, <span style="font-weight: bold;">host</span> <span style="font-style: italic;">'172.31.37.147'</span>);
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">SERVER</span> clickhouse_svr FOREIGN <span class="keyword">DATA</span> WRAPPER clickhousedb_fdw OPTIONS(dbname <span class="string">'test_db'</span>, driver <span class="string">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, host <span class="string">'172.31.37.147'</span>);</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建user mapping
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">USER</span> MAPPING <span style="font-weight: bold;">FOR</span> <span style="font-weight: bold;">CURRENT_USER</span> SERVER clickhouse_svr;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="keyword">MAPPING</span> <span class="keyword">FOR</span> <span class="keyword">CURRENT_USER</span> <span class="keyword">SERVER</span> clickhouse_svr;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建外表, 并且表名需要跟 <code>clickshouse</code> 的表名一致。 
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span>
-(
-     bbl int8,
-     owner_name text,
-     address text,
-     tax_class text,
-     tax_rate text,
-     emv <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     tbea <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     bav <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     tba text,
-     property_tax text,
-     condonumber text,
-     condo text,
-     insertion_date <span style="font-weight: bold; text-decoration: underline;">Time</span>
- ) SERVER clickhouse_svr;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> FOREIGN <span class="keyword">TABLE</span> tax_bills_nyc</span><br><span class="line">(</span><br><span class="line">     bbl <span class="built_in">int8</span>,</span><br><span class="line">     owner_name <span class="built_in">text</span>,</span><br><span class="line">     address <span class="built_in">text</span>,</span><br><span class="line">     tax_class <span class="built_in">text</span>,</span><br><span class="line">     tax_rate <span class="built_in">text</span>,</span><br><span class="line">     emv <span class="built_in">Float</span>,</span><br><span class="line">     tbea <span class="built_in">Float</span>,</span><br><span class="line">     bav <span class="built_in">Float</span>,</span><br><span class="line">     tba <span class="built_in">text</span>,</span><br><span class="line">     property_tax <span class="built_in">text</span>,</span><br><span class="line">     condonumber <span class="built_in">text</span>,</span><br><span class="line">     condo <span class="built_in">text</span>,</span><br><span class="line">     insertion_date <span class="keyword">Time</span></span><br><span class="line"> ) <span class="keyword">SERVER</span> clickhouse_svr;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 查询数据
-<img src="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+<img src="./images/clickhouse_fwd_query_results.png" alt="clickhouse_fwd_query_results.png">
 </p>
 </div>
 </div>
-</div>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
+<p class="date">Date: 2020-08-13</p>
+<p class="date">Created: 2022-09-19 Mon 00:11</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+
       
     </div>
 
@@ -550,7 +504,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3k</span>
+              <span>3.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -569,11 +523,20 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
     <div class="post-body" itemprop="articleBody">
 
       
-          <div id="content">
+          <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge02849f">1. 问题描述</a></li>
+<li><a href="#orga2e841d">2. 解决方案</a></li>
+<li><a href="#org399fe2c">3. 总结</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-org293e52b" class="outline-2">
-<h2 id="org293e52b">问题描述</h2>
-<div class="outline-text-2" id="text-org293e52b">
+<div id="outline-container-orge02849f" class="outline-2">
+<h2 id="orge02849f"><span class="section-number-2">1</span> 问题描述</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
 </p>
@@ -602,9 +565,9 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </div>
 </div>
 
-<div id="outline-container-orgb09cbb6" class="outline-2">
-<h2 id="orgb09cbb6">解决方案</h2>
-<div class="outline-text-2" id="text-orgb09cbb6">
+<div id="outline-container-orga2e841d" class="outline-2">
+<h2 id="orga2e841d"><span class="section-number-2">2</span> 解决方案</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
 但是又不想用很重的库如 <code>sqlalchemy</code> 等支持 <code>ORM</code> 的库，觉得还是对程序员不友好。而且要写很多手脚架来适配。
@@ -615,8 +578,8 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 
-<div class="figure">
-<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
+<div id="orge5fd9bc" class="figure">
+<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg" alt="records.jpg">
 </p>
 </div>
 
@@ -625,21 +588,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">infer_pd_schema</span>(df):
-    <span style="font-style: italic;">'''infer pandas dataframe schema</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = []
-    <span style="font-weight: bold; font-style: italic;">type_map</span> = {
-        <span style="font-style: italic;">'int64'</span>: <span style="font-style: italic;">'int8'</span>,
-        <span style="font-style: italic;">'object'</span>: <span style="font-style: italic;">'varchar(512)'</span>,
-        <span style="font-style: italic;">'float64'</span>: <span style="font-style: italic;">'float8'</span>}
-
-    <span style="font-weight: bold;">for</span> col, tp <span style="font-weight: bold;">in</span> df.dtypes.items():
-        <span style="font-weight: bold; font-style: italic;">t</span> = type_map[tp.name]
-        <span style="font-weight: bold; font-style: italic;">item</span> = f<span style="font-style: italic;">'''"{col}"  {t}'''</span>
-        schema.append(item)
-    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">', '</span>.join(schema)
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span>}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -651,36 +600,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 上传 <code>pandas dataframe</code> 数据到数据库临时表
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">create_temp_table_with_df</span>(conn, table, dataframe):
-    <span style="font-style: italic;">'''conn is a pgsql connect transaction</span>
-<span style="font-style: italic;">    table is the name of the temp table and df is the pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = infer_pd_schema(dataframe)
-    conn.query(f<span style="font-style: italic;">'drop table if exists {table}'</span>)
-
-    <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''create TEMPORARY table if not exists {table}</span>
-<span style="font-style: italic;">    ({schema});'''</span>
-    logger.info(query)
-    conn.query(query)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">After testing, threads will not improve the uploading performance</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">600,000 records can be delivered within secs.</span>
-
-    <span style="font-weight: bold;">with</span> tempfile.NamedTemporaryFile() <span style="font-weight: bold;">as</span> tf:
-        <span style="font-weight: bold; font-style: italic;">name</span> = tf.name
-        logger.info(f<span style="font-style: italic;">'creating temp data file {name}'</span>)
-        dataframe.to_csv(name, header=<span style="font-weight: bold; text-decoration: underline;">True</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>)
-        <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''</span>
-<span style="font-style: italic;">        copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span>
-<span style="font-style: italic;">        '''</span>
-        <span style="font-weight: bold; font-style: italic;">rconn</span> = conn._conn.connection
-        <span style="font-weight: bold; font-style: italic;">cursor</span> = rconn.cursor()
-        <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(name, <span style="font-style: italic;">'r'</span>) <span style="font-weight: bold;">as</span> f:
-            cursor.copy_expert(query, f)
-        rconn.commit()
-    logger.info(<span style="font-style: italic;">'upload data done'</span>)
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_temp_table_with_df</span><span class="params">(conn, table, dataframe)</span>:</span></span><br><span class="line">    <span class="string">'''conn is a pgsql connect transaction</span><br><span class="line">    table is the name of the temp table and df is the pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    schema = infer_pd_schema(dataframe)</span><br><span class="line">    conn.query(f<span class="string">'drop table if exists {table}'</span>)</span><br><span class="line"></span><br><span class="line">    query = f<span class="string">'''create TEMPORARY table if not exists {table}</span><br><span class="line">    ({schema});'''</span></span><br><span class="line">    logger.info(query)</span><br><span class="line">    conn.query(query)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># After testing, threads will not improve the uploading performance</span></span><br><span class="line">    <span class="comment"># here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span></span><br><span class="line">    <span class="comment"># 600,000 records can be delivered within secs.</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tempfile.NamedTemporaryFile() <span class="keyword">as</span> tf:</span><br><span class="line">	name = tf.name</span><br><span class="line">	logger.info(f<span class="string">'creating temp data file {name}'</span>)</span><br><span class="line">	dataframe.to_csv(name, header=<span class="keyword">True</span>, index=<span class="keyword">False</span>)</span><br><span class="line">	query = f<span class="string">'''</span><br><span class="line">	copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span><br><span class="line">	'''</span></span><br><span class="line">	rconn = conn._conn.connection</span><br><span class="line">	cursor = rconn.cursor()</span><br><span class="line">	<span class="keyword">with</span> open(name, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">	    cursor.copy_expert(query, f)</span><br><span class="line">	rconn.commit()</span><br><span class="line">    logger.info(<span class="string">'upload data done'</span>)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -692,29 +612,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 对 <code>pandas dataframe</code> 的临时表与数据库中已经有的表做联合操作
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">query_pg_with_df</span>(table, dataframe, sql):
-    <span style="font-style: italic;">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span>
-<span style="font-style: italic;">    return a pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">pgdb</span> = records.Database(
-        <span style="font-style: italic;">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.<span style="font-weight: bold;">format</span>(
-            host=PG_SQL_HOST,
-            db=PG_SQL_NAME,
-            user=PG_SQL_USER,
-            pwd=PG_SQL_PASS)
-    )
-
-    <span style="font-weight: bold;">try</span>:
-        <span style="font-weight: bold;">with</span> pgdb.transaction() <span style="font-weight: bold;">as</span> conn:
-            create_temp_table_with_df(conn, table, dataframe)
-            logger.info(sql)
-            <span style="font-weight: bold; font-style: italic;">res</span> = conn.query(sql)
-            <span style="font-weight: bold;">return</span> pd.DataFrame(res.as_dict())
-    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">Exception</span> <span style="font-weight: bold;">as</span> e:
-        logger.error(e.msg)
-    <span style="font-weight: bold;">finally</span>:
-        pgdb.close()
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_pg_with_df</span><span class="params">(table, dataframe, sql)</span>:</span></span><br><span class="line">    <span class="string">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span><br><span class="line">    return a pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    pgdb = records.Database(</span><br><span class="line">	<span class="string">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.format(</span><br><span class="line">	    host=PG_SQL_HOST,</span><br><span class="line">	    db=PG_SQL_NAME,</span><br><span class="line">	    user=PG_SQL_USER,</span><br><span class="line">	    pwd=PG_SQL_PASS)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">with</span> pgdb.transaction() <span class="keyword">as</span> conn:</span><br><span class="line">	    create_temp_table_with_df(conn, table, dataframe)</span><br><span class="line">	    logger.info(sql)</span><br><span class="line">	    res = conn.query(sql)</span><br><span class="line">	    <span class="keyword">return</span> pd.DataFrame(res.as_dict())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">	logger.error(e.msg)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">	pgdb.close()</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -725,9 +623,9 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </div>
 </div>
 
-<div id="outline-container-orgd70de58" class="outline-2">
-<h2 id="orgd70de58">总结</h2>
-<div class="outline-text-2" id="text-orgd70de58">
+<div id="outline-container-org399fe2c" class="outline-2">
+<h2 id="org399fe2c"><span class="section-number-2">3</span> 总结</h2>
+<div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
 <li>提供了 <code>pandas dataframe</code> 如何与 <code>pgsql</code> 里的表做交互比如 <code>join</code> 等操作。</li>
@@ -735,26 +633,11 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </ul>
 </div>
 </div>
-</div>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
+<p class="date">Date: 2020-03-18</p>
+<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+
       
     </div>
 
@@ -822,14 +705,14 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.4k</span>
+              <span>2.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -841,11 +724,32 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
     <div class="post-body" itemprop="articleBody">
 
       
-          <div id="content">
+          <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga32e433">1. 准备工作</a></li>
+<li><a href="#orge1ae11e">2. 配置的详细过程</a>
+<ul>
+<li><a href="#org69c9bfe">2.1. 配置SSL证书</a>
+<ul>
+<li><a href="#org5e88742">2.1.1. 生成私有证书</a></li>
+</ul>
+</li>
+<li><a href="#org2229540">2.2. 配置Postfix</a></li>
+<li><a href="#orge412bf6">2.3. 配置Dovecot</a></li>
+<li><a href="#org01956e5">2.4. 生效配置，重启服务</a></li>
+<li><a href="#orgaf9410a">2.5. 确认以及配置防火墙</a></li>
+</ul>
+</li>
+<li><a href="#org8b2d795">3. 测试功能</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-orgddcdaec" class="outline-2">
-<h2 id="orgddcdaec">准备工作</h2>
-<div class="outline-text-2" id="text-orgddcdaec">
+<div id="outline-container-orga32e433" class="outline-2">
+<h2 id="orga32e433"><span class="section-number-2">1</span> 准备工作</h2>
+<div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>首先你需要一个 <code>Linux</code> 的 <code>VPS</code> ，以及一个可以用的域名。
 <code>VPS</code> 的操作系统可以选 <code>Ubuntu</code> 或者 <code>centos</code> 等主流的 <code>Linux</code> 系统。
@@ -853,12 +757,12 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 <li>在你的域名供应商的平台上配置好你的域名解析。
 一般情况下，需要配置3种域名解析类型， 分别是 <code>A</code>, <code>MX</code>, <code>TXT</code>
 下面是我的配置, 我用的是阿里云的域名服务：
-<img src="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png"></li>
+<img src="http://shwang.ink:4800/images/postfix-dovecot-config/domain_configure.png" alt="domain_configure.png"></li>
 <li><p>
 在 <code>VPS</code> 上安装好 <code>postfix</code> ， <code>dovecot</code> ， <code>sasl-dev</code> 等软件。
 <code>libsasl</code> 是 <code>postfix</code> 和 <code>dovecot</code> 认证用的。你需要根据你的 <code>VPS</code> 操作系统的类型选择对应的包管理工具安装这些包。
 </p>
-<pre class="example">postfix-2.10.1-7.el7.x86_64
+<pre class="example" id="org639e97c">postfix-2.10.1-7.el7.x86_64
 dovecot-2.2.36-3.el7_7.1.x86_64
 dovecot-mysql-2.2.36-3.el7_7.1.x86_64
 cyrus-sasl-lib-2.1.26-23.el7.x86_64
@@ -872,17 +776,17 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 </div>
 </div>
 
-<div id="outline-container-org3c31531" class="outline-2">
-<h2 id="org3c31531">配置的详细过程</h2>
-<div class="outline-text-2" id="text-org3c31531">
+<div id="outline-container-orge1ae11e" class="outline-2">
+<h2 id="orge1ae11e"><span class="section-number-2">2</span> 配置的详细过程</h2>
+<div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgc6fd9e3" class="outline-3">
-<h3 id="orgc6fd9e3">配置SSL证书</h3>
-<div class="outline-text-3" id="text-orgc6fd9e3">
+<div id="outline-container-org69c9bfe" class="outline-3">
+<h3 id="org69c9bfe"><span class="section-number-3">2.1</span> 配置SSL证书</h3>
+<div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-orgca3ce7c" class="outline-4">
-<h4 id="orgca3ce7c">生成私有证书</h4>
-<div class="outline-text-4" id="text-orgca3ce7c">
+<div id="outline-container-org5e88742" class="outline-4">
+<h4 id="org5e88742"><span class="section-number-4">2.1.1</span> 生成私有证书</h4>
+<div class="outline-text-4" id="text-2-1-1">
 <p>
 可以手动生成私有证书， 也可以通过acme tools 生成对应的SSL证书。
 </p>
@@ -891,9 +795,7 @@ cyrus-sasl-2.1.26-23.el7.x86_64
 生成根证书及私钥
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">openssl genrsa -out private/cakey.pem 1024 <span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">生成CA根证书私钥</span>
-openssl req -new -x509 -key private/cakey.pem  -out cacert.pem <span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">生成CA根证书</span>
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl genrsa -out private/cakey.pem <span class="number">1024</span> <span class="comment">#生成CA根证书私钥</span></span><br><span class="line">openssl req -new -x509 -key private/cakey.pem  -out cacert.pem <span class="comment">#生成CA根证书</span></span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 
 <li><p>
@@ -901,10 +803,7 @@ openssl req -new -x509 -key private/cakey.pem  -out cacert.pem <span style="font
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">openssl genrsa -out private/yourdomain.key 1024
-openssl req -new -key private/server.key -out crl/yourdomain.csr <span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">生成证书请求文件，可提供认证CA签核，或自签名。</span>
-openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">自签名证书</span>
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl genrsa -out private/yourdomain.key <span class="number">1024</span></span><br><span class="line">openssl req -new -key private/server.key -out crl/yourdomain.csr <span class="comment">#生成证书请求文件，可提供认证CA签核，或自签名。</span></span><br><span class="line">openssl ca -in crl/server.csr -out certs/yourdomain.crt <span class="comment">#自签名证书</span></span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 </ul>
 
@@ -915,15 +814,15 @@ openssl ca -in crl/server.csr -out certs/yourdomain.crt <span style="font-weight
 </div>
 </div>
 
-<div id="outline-container-org41b1de3" class="outline-3">
-<h3 id="org41b1de3">配置Postfix</h3>
-<div class="outline-text-3" id="text-org41b1de3">
+<div id="outline-container-org2229540" class="outline-3">
+<h3 id="org2229540"><span class="section-number-3">2.2</span> 配置Postfix</h3>
+<div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/postfix/main.cf</code> 文件，配置域名，证书并起用 <code>SSL</code> 以及 <code>sasl</code> 的选项。
 </p>
 
-<pre class="example">myhostname = xxxxx.com 
+<pre class="example" id="orgfc435c6">myhostname = xxxxx.com 
 mydomain = xxxx.com
 smtpd_use_tls = yes
 smtp_tls_mandatory_protocols = !SSLv2, !SSLv3
@@ -947,7 +846,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example">@domainname   xxxxx.gmail.com
+<pre class="example" id="org5fd21e3">@domainname   xxxxx.gmail.com
 </pre>
 
 <p>
@@ -959,7 +858,7 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 添加一行到文件最后面
 </p>
 
-<pre class="example">[smtp.gmail.com]:587    account@gmail.com:password
+<pre class="example" id="orgf366e1d">[smtp.gmail.com]:587    account@gmail.com:password
 </pre>
 
 <p>
@@ -967,71 +866,63 @@ smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 <code>account</code> 和 <code>password</code> 替换为你真实的用户名和密码。
 </p></li>
 <li>编辑 <code>/etc/postfix/master.cf</code> 文件。
-<img src="http://shwang.ink:4800/images/postfix-dovecot-config/mastercf.png"></li>
+<img src="http://shwang.ink:4800/images/postfix-dovecot-config/mastercf.png" alt="mastercf.png"></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org17b648d" class="outline-3">
-<h3 id="org17b648d">配置Dovecot</h3>
-<div class="outline-text-3" id="text-org17b648d">
+<div id="outline-container-orge412bf6" class="outline-3">
+<h3 id="orge412bf6"><span class="section-number-3">2.3</span> 配置Dovecot</h3>
+<div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li><p>
 编辑 <code>/etc/dovecot/dovecot.conf</code> 文件, 确认支持的协议为 <code>imap</code> 和 <code>pop3</code>
 </p>
-<pre class="example">protocols = imap pop3
+<pre class="example" id="orgbbb9d0d">protocols = imap pop3
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-auth.conf</code> ，确认以下配置：
 </p>
-<pre class="example">disable_plaintext_auth = no
+<pre class="example" id="org20d2467">disable_plaintext_auth = no
 auth_mechanisms = plain login
 </pre></li>
 <li><p>
 编辑 <code>/etc/dovecot/conf.d/10-ssl.conf</code>, 确认开启了 <code>ssl</code> 以及使用了正确的证书：
 </p>
-<pre class="example">ssl = yes
-ssl_cert = &lt;/etc/pki/tls/certs/yourdomain.crt
-ssl_key = &lt;/etc/pki/tls/private/yourdomain.key
-</pre></li>
+<pre class="example" id="org8eb9e8b">ssl = yes
+ssl_cert = </pre></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge490a2c" class="outline-3">
-<h3 id="orge490a2c">生效配置，重启服务</h3>
-<div class="outline-text-3" id="text-orge490a2c">
+<div id="outline-container-org01956e5" class="outline-3">
+<h3 id="org01956e5"><span class="section-number-3">2.4</span> 生效配置，重启服务</h3>
+<div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li><p>
 更新 <code>postfix lookup table</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">sudo postmap /etc/postfix/sasl_passwd
-sudo postmap  /etc/postfix/generic  
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo postmap /etc/postfix/sasl_passwd</span><br><span class="line">sudo postmap  /etc/postfix/generic  </span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 重启 <code>postfix=， =dovecot</code> 服务
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">sudo systemctl restart postfix
-sudo systemctl restart dovecot        
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl restart postfix</span><br><span class="line">sudo systemctl restart dovecot        </span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 开机启动 <code>postfix</code>, <code>dovecot</code> 服务
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">sudo systemctl enable postfix
-sudo systemctl enable dovecot
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> postfix</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> dovecot</span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfe9bb0e" class="outline-3">
-<h3 id="orgfe9bb0e">确认以及配置防火墙</h3>
-<div class="outline-text-3" id="text-orgfe9bb0e">
+<div id="outline-container-orgaf9410a" class="outline-3">
+<h3 id="orgaf9410a"><span class="section-number-3">2.5</span> 确认以及配置防火墙</h3>
+<div class="outline-text-3" id="text-2-5">
 <p>
 下面是 <code>postfix</code>, <code>dovecot</code> 使用到的端口， 配置 <code>iptables</code> 打开这些端口。
 </p>
@@ -1089,9 +980,9 @@ sudo systemctl enable dovecot
 </div>
 </div>
 
-<div id="outline-container-org5268e8c" class="outline-2">
-<h2 id="org5268e8c">测试功能</h2>
-<div class="outline-text-2" id="text-org5268e8c">
+<div id="outline-container-org8b2d795" class="outline-2">
+<h2 id="org8b2d795"><span class="section-number-2">3</span> 测试功能</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 在测试 <code>smtp</code> 和 <code>imap</code> 协议的时候， 对 <code>encrypted session only</code> 使用的端口默认是需要用 <code>openssl</code> 来访问的。
 而非 <code>encrypted</code> 可以直接使用 <code>telnet</code> 来测试。
@@ -1103,13 +994,12 @@ sudo systemctl enable dovecot
 调用 <code>openssl</code> 访问服务器的 <code>465</code> 端口：
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">openssl s_client -connect mail.example.com:465
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl s_client -connect mail.example.com:<span class="number">465</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 <p>
 返回 <code>ssl</code> 协商的结果
 </p>
-<pre class="example">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+<pre class="example" id="orgba90b28">New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
 Server public key is 4096 bit
 Secure Renegotiation IS supported
 Compression: NONE
@@ -1132,30 +1022,16 @@ SSL-Session:
     0030 - 72 b6 21 45 fa 82 3b 8e-51 76 5b 4a 2e 6c 26 2a   r.!E..;.Qv[J.l&amp;*
     0040 - 15 0c a3 3d 2c ed de ee-41 04 26 0c 89 93 c3 4f   ...=,...A.&amp;....O
     0050 - e9 84 a0 46 68 73 b7 f4-94 3f 46 a9 af 37 a4 7f   ...Fhs...?F..7..
-    0060 - 2f 3c 73 bc 43 8b 75 ac-5f 33 10 60 f6 d4 ca 74   /&lt;s.C.u._3.`...t
-    0070 - a6 60 49 8f bc 7e be 73-1e 47 c5 6d 50 21 95 53   .`I..~.s.G.mP!.S
-    0080 - 9b 78 82 d6 0d d5 32 20-eb 94 50 bc a6 b1 6f fe   .x....2 ..P...o.
-    0090 - 03 ee 80 4d 09 35 47 14-e4 5d aa d2 18 1f c7 ee   ...M.5G..]......
-    00a0 - ca 11 a6 c1 3f d3 66 42-df 3b 4d 66 0e 7e 95 89   ....?.fB.;Mf.~..
-    00b0 - 62 d0 69 76 3b fd 74 7a-d7 86 d5 6a d0 23 f8 b3   b.iv;.tz...j.#..
-
-    Start Time: 1584262970
-    Timeout   : 7200 (sec)
-    Verify return code: 18 (self signed certificate)
-    Extended master secret: no
----
-220 mail.example.com ESMTP Postfix
-</pre>
+    0060 - 2f 3c 73 bc 43 8b 75 ac-5f 33 10 60 f6 d4 ca 74   /<s.c.u._3.`...t 11="" 18="" 21="" 23="" 32="" 35="" 47="" 49="" 50="" 53="" 60="" 62="" 66="" 69="" 74="" 76="" 78="" 80="" 82="" 86="" 89="" 94="" 95="" 220="" 7200="" 1584262970="" 0070="" -="" a6="" 8f="" bc="" 7e="" be="" 73-1e="" c5="" 6d="" .`i..~.s.g.mp!.s="" 0080="" 9b="" d6="" 0d="" d5="" 20-eb="" b1="" 6f="" fe="" .x....2="" ..p...o.="" 0090="" 03="" ee="" 4d="" 09="" 14-e4="" 5d="" aa="" d2="" 1f="" c7="" ...m.5g..]......="" 00a0="" ca="" c1="" 3f="" d3="" 42-df="" 3b="" 0e="" ....?.fb.;mf.~..="" 00b0="" d0="" fd="" 7a-d7="" 6a="" f8="" b3="" b.iv;.tz...j.#..="" start="" time:="" timeout="" :="" (sec)="" verify="" return="" code:="" (self="" signed="" certificate)="" extended="" master="" secret:="" no="" ---="" mail.example.com="" esmtp="" postfix="" <="" pre="">
 <p>
 输入 <code>auth login plain</code> 的命令, 后面跟上你的用户名密码的 <code>base64</code> 编码。
 其中 <code>account</code>, <code>password</code> 用你真实的账号替换。
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="font-weight: bold;">echo</span> -ne <span style="font-style: italic;">"\0account\0password"</span> | base64
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="operator">-ne</span> <span class="string">"\0account\0password"</span> | base64</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example">220 machineheart.tech ESMTP Postfix
+<pre class="example" id="org754480c">220 machineheart.tech ESMTP Postfix
 AUTH LOGIN PLAIN AGFjY291bnQAcGFzc3dvcmQ=
 501 5.5.4 Syntax: AUTH mechanism
 AUTH LOGIN
@@ -1163,17 +1039,16 @@ AUTH LOGIN
 </pre>
 <p>
 看到类似的返回即表示验证成功。后面即可以使用 <code>smtp</code> 的常用命令类似 <code>mail from:</code>, <code>rcpt to:</code> 去发送邮件了。
-</p></li>
+</p></s.c.u._3.`...t></pre></li>
 <li><p>
 测试 <code>IMAP</code> 服务
 与 <code>smtp</code> 类似，也是使用 <code>openssl</code> 来测试 <code>993</code> 端口。
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">openssl s_client -connect mail.example.com:993
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">openssl s_client -connect mail.example.com:<span class="number">993</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
-<pre class="example"> *tag login account password*
+<pre class="example" id="orgb8f90b2"> *tag login account password*
  tag OK [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES 
  THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED 
  I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE 
@@ -1188,26 +1063,11 @@ tag OK List completed (0.001 + 0.000 secs).
 </ul>
 </div>
 </div>
-</div>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
+<p class="date">Date: 2020-03-15</p>
+<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+
       
     </div>
 
@@ -1353,12 +1213,12 @@ tag OK List completed (0.001 + 0.000 secs).
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">14k</span>
+    <span title="Symbols count total">11k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">12 mins.</span>
+    <span title="Reading time total">10 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

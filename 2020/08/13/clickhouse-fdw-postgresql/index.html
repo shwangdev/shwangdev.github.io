@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"blog.machineheart.tech","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw 依赖高版本的 GNU tool chain 需要使用 GCC 7+ 来编译， 并且依赖的一些第三方库的版本也比较高， 原生 CentOS 的 repo 不能满足依赖，所以用选用 Conda 环境来解决依赖并 build 生成动态库。      本质上 Clickhouse-fdw 是一个 postgr">
+  <meta name="description" content="Table of Contents   1. Conda环境下搭建Clickhouse-fdw  1.1. 编译clickhouse-odbc 1.2. 编译clickhouse-fdw   2. 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse       1 Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Clickhouse-fdw 集成Clickhouse 与Postgresql的探索">
 <meta property="og:url" content="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/index.html">
 <meta property="og:site_name" content="Shawn&#96;s Blog">
-<meta property="og:description" content="Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw 依赖高版本的 GNU tool chain 需要使用 GCC 7+ 来编译， 并且依赖的一些第三方库的版本也比较高， 原生 CentOS 的 repo 不能满足依赖，所以用选用 Conda 环境来解决依赖并 build 生成动态库。      本质上 Clickhouse-fdw 是一个 postgr">
-<meta property="og:image" content="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+<meta property="og:description" content="Table of Contents   1. Conda环境下搭建Clickhouse-fdw  1.1. 编译clickhouse-odbc 1.2. 编译clickhouse-fdw   2. 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse       1 Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw">
+<meta property="og:image" content="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/images/clickhouse_fwd_query_results.png">
 <meta property="article:published_time" content="2020-08-13T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-08-13T12:56:13.565Z">
+<meta property="article:modified_time" content="2022-09-18T16:12:07.050Z">
 <meta property="article:author" content="Shawn Wang">
 <meta property="article:tag" content="clickhouse">
 <meta property="article:tag" content="pgsql">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+<meta name="twitter:image" content="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/images/clickhouse_fwd_query_results.png">
 
 <link rel="canonical" href="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/">
 
@@ -79,6 +79,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -202,10 +204,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-08-13 08:00:00 / Modified: 20:56:13" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
+              <time title="Created: 2020-08-13 08:00:00" itemprop="dateCreated datePublished" datetime="2020-08-13T08:00:00+08:00">2020-08-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-09-19 00:12:07" itemprop="dateModified" datetime="2022-09-19T00:12:07+08:00">2022-09-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -222,7 +230,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.2k</span>
+              <span>5.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -241,12 +249,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <div id="content">
+        <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6eed4b1">1. Conda环境下搭建Clickhouse-fdw</a>
+<ul>
+<li><a href="#org2f7c743">1.1. 编译clickhouse-odbc</a></li>
+<li><a href="#org8499aa0">1.2. 编译clickhouse-fdw</a></li>
+</ul>
+</li>
+<li><a href="#org7b31c57">2. 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></a></li>
+</ul>
+</div>
+</div>
 
 
-<div id="outline-container-orgd7e29ae" class="outline-2">
-<h2 id="orgd7e29ae">Conda环境下搭建Clickhouse-fdw</h2>
-<div class="outline-text-2" id="text-orgd7e29ae">
+<div id="outline-container-org6eed4b1" class="outline-2">
+<h2 id="org6eed4b1"><span class="section-number-2">1</span> Conda环境下搭建Clickhouse-fdw</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
 原生 <code>CentOS</code> 的 <code>repo</code> 不能满足依赖，所以用选用 <code>Conda</code> 环境来解决依赖并 <code>build</code> 生成动态库。
@@ -260,32 +281,26 @@
 </div>
 </div>
 
-<div id="outline-container-orga2a2c46" class="outline-3">
-<h3 id="orga2a2c46">编译clickhouse-odbc</h3>
-<div class="outline-text-3" id="text-orga2a2c46">
+<div id="outline-container-org2f7c743" class="outline-3">
+<h3 id="org2f7c743"><span class="section-number-3">1.1</span> 编译clickhouse-odbc</h3>
+<div class="outline-text-3" id="text-1-1">
 <ol class="org-ol">
 <li><p>
 递归拉取 <code>clichouse-odbc</code> 的 <code>source</code>, <code>--recursive</code> 可以把项目下的 <code>sub project</code> 一并拉下来。
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">git clone --recursive https@github.com:ClickHouse/clickhouse-odbc.git
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --recursive https@github.com:ClickHouse/clickhouse-odbc.git</span><br></pre></td></tr></tbody></table></figure>
 </div></li>
 <li><p>
 编译Clickhouse-odbc, README里面使用的是devtoolset-8 为了解决高版本的GCC的问题，我这里用的Conda的环境，需要用conda 安装gcc 7以及其他包括cmake 14+在内的依赖包.
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="font-weight: bold;">cd</span> clickhouse-odbc
-mkdir build
-<span style="font-weight: bold;">cd</span> build
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span>
-cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> clickhouse-odbc</span><br><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"><span class="comment"># Configuration options for the project can be specified in the next command in a form of '-Dopt=val'</span></span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..</span><br></pre></td></tr></tbody></table></figure>
 </div>
 <p>
 在第7部的时候会有报错，错误步骤是在编译 <code>gtest</code> 的测试 <code>binary</code>, 其实可以不用解决，因为在此错误之前 <code>libclickhouseodbc.so</code> 已经被编译出来了。
 </p>
-<pre class="example">(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
+<pre class="example" id="orgbbf944b">(py3) [ec2-user@ip-172-31-46-209 driver]$ ldd libclickhouseodbc.so
     linux-vdso.so.1 (0x00007ffd111b4000)
     libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f4fcd072000)
     libstdc++.so.6 =&gt; /home/ec2-user/miniconda3/envs/py3/lib/libstdc++.so.6 (0x00007f4fcd616000)
@@ -306,15 +321,15 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 </div>
 </div>
 
-<div id="outline-container-orgd4470fa" class="outline-3">
-<h3 id="orgd4470fa">编译clickhouse-fdw</h3>
-<div class="outline-text-3" id="text-orgd4470fa">
+<div id="outline-container-org8499aa0" class="outline-3">
+<h3 id="org8499aa0"><span class="section-number-3">1.2</span> 编译clickhouse-fdw</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 <code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
 <code>Conda</code> 安装的 <code>postgresql</code> 没有写入 <code>systemctl</code>, 需要手动配置启动。
 <code>Conda</code> 安装的 <code>postgresql pg_config</code> 输出的系统变量里"CC"的指向路径是有问题的。
 </p>
-<pre class="example">pg_config 
+<pre class="example" id="org83d1716">pg_config
 ....
 CC = /tmp/build/80754af9/postgresql-split_1545233302450/_build_env/bin/x86_64-conda_cos6-linux-gnu-cc
 </pre>
@@ -323,7 +338,7 @@ CC = /tmp/build/80754af9/postgresql-split_1545233302450/_build_env/bin/x86_64-co
 这里 <code>CC</code> 是只编译 <code>postgresql</code> 的编译器路径，系统里根本没有这个，需要修改 <code>Makefile</code> 里面强制指向 <code>CC</code> 到系统的 <code>gcc</code> 编译器，否则会报错。
 </p>
 
-<pre class="example">(py3) [ec2-user@ip-172-31-46-209 clickhousedb_fdw]$ make USE_PGXS=1
+<pre class="example" id="orgae1bc3b">(py3) [ec2-user@ip-172-31-46-209 clickhousedb_fdw]$ make USE_PGXS=1
 rm -rf libclickhouse-1.0.so lib/*.o
 make -f lib/Makefile
 make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
@@ -347,42 +362,18 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 </div>
 
 
-<div id="outline-container-org13d7552" class="outline-2">
-<h2 id="org13d7552">配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
-<div class="outline-text-2" id="text-org13d7552">
+<div id="outline-container-org7b31c57" class="outline-2">
+<h2 id="org7b31c57"><span class="section-number-2">2</span> 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div class="outline-text-2" id="text-2">
 <p>
 先配置 <code>clickhouse</code> 表并导入数据
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> DATABASE test_database;
-
-USE test_database;
-
-<span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span> 
-(
-    bbl Int64,
-    owner_name String,
-    address String,
-    tax_class String,
-    tax_rate String,
-    emv Float64,
-    tbea Float64,
-    bav Float64,
-    tba String,
-    property_tax String,
-    condonumber String,
-    condo String,
-    insertion_date DateTime MATERIALIZED now() 
-)
-ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_class <span style="font-weight: bold;">ORDER</span> <span style="font-weight: bold;">BY</span> (owner_name)
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> test_database;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> test_database;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tax_bills_nyc</span><br><span class="line">(</span><br><span class="line">    bbl Int64,</span><br><span class="line">    owner_name <span class="keyword">String</span>,</span><br><span class="line">    address <span class="keyword">String</span>,</span><br><span class="line">    tax_class <span class="keyword">String</span>,</span><br><span class="line">    tax_rate <span class="keyword">String</span>,</span><br><span class="line">    emv Float64,</span><br><span class="line">    tbea Float64,</span><br><span class="line">    bav Float64,</span><br><span class="line">    tba <span class="keyword">String</span>,</span><br><span class="line">    property_tax <span class="keyword">String</span>,</span><br><span class="line">    condonumber <span class="keyword">String</span>,</span><br><span class="line">    condo <span class="keyword">String</span>,</span><br><span class="line">    insertion_date DateTime <span class="keyword">MATERIALIZED</span> <span class="keyword">now</span>() </span><br><span class="line">)</span><br><span class="line"><span class="keyword">ENGINE</span> = MergeTree <span class="keyword">PARTITION</span> <span class="keyword">BY</span> tax_class <span class="keyword">ORDER</span> <span class="keyword">BY</span> (owner_name)</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-bash">curl -X GET <span style="font-style: italic;">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  <span style="font-style: italic;">\</span>
-  | clickhouse-client --input_format_allow_errors_num=10 <span style="font-style: italic;">\</span>
-  --query=<span style="font-style: italic;">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span>
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">curl -X GET <span class="string">'http://taxbills.nyc/tax_bills_june15_bbls.csv'</span>  \</span><br><span class="line">  | clickhouse-client --input_format_allow_errors_num=<span class="number">10</span> \</span><br><span class="line">  --query=<span class="string">"INSERT INTO test_database.tax_bills_nyc FORMAT CSV"</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -390,8 +381,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">initdb pdatta
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">initdb pdatta</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -401,24 +391,21 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">pg_ctl start -D pdata -s -w -t 300
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">pg_ctl start -D pdata <span class="operator">-s</span> -w -t <span class="number">300</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 <p>
 如果需要停止服务可以运行
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">pg_ctl stop -D pdata -s -m fast
-</pre>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">pg_ctl stop -D pdata <span class="operator">-s</span> -m fast</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建 <code>clickhouse-fdw extension</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> EXTENSION clickhousedb_fdw;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> EXTENSION clickhousedb_fdw;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -426,67 +413,34 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> SERVER clickhouse_svr <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">DATA</span> WRAPPER clickhousedb_fdw <span style="font-weight: bold;">OPTIONS</span>(dbname <span style="font-style: italic;">'test_db'</span>, driver <span style="font-style: italic;">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, <span style="font-weight: bold;">host</span> <span style="font-style: italic;">'172.31.37.147'</span>);
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">SERVER</span> clickhouse_svr FOREIGN <span class="keyword">DATA</span> WRAPPER clickhousedb_fdw OPTIONS(dbname <span class="string">'test_db'</span>, driver <span class="string">'/home/ec2-user/workspaces/clickhouse-odbc/build/driver/libclickhouseodbc.so'</span>, host <span class="string">'172.31.37.147'</span>);</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建user mapping
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">USER</span> MAPPING <span style="font-weight: bold;">FOR</span> <span style="font-weight: bold;">CURRENT_USER</span> SERVER clickhouse_svr;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="keyword">MAPPING</span> <span class="keyword">FOR</span> <span class="keyword">CURRENT_USER</span> <span class="keyword">SERVER</span> clickhouse_svr;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 创建外表, 并且表名需要跟 <code>clickshouse</code> 的表名一致。 
 </p>
 <div class="org-src-container">
-<pre class="src src-sql"><span style="font-weight: bold;">CREATE</span> <span style="font-weight: bold;">FOREIGN</span> <span style="font-weight: bold;">TABLE</span> <span style="font-weight: bold;">tax_bills_nyc</span>
-(
-     bbl int8,
-     owner_name text,
-     address text,
-     tax_class text,
-     tax_rate text,
-     emv <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     tbea <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     bav <span style="font-weight: bold; text-decoration: underline;">Float</span>,
-     tba text,
-     property_tax text,
-     condonumber text,
-     condo text,
-     insertion_date <span style="font-weight: bold; text-decoration: underline;">Time</span>
- ) SERVER clickhouse_svr;
-</pre>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> FOREIGN <span class="keyword">TABLE</span> tax_bills_nyc</span><br><span class="line">(</span><br><span class="line">     bbl <span class="built_in">int8</span>,</span><br><span class="line">     owner_name <span class="built_in">text</span>,</span><br><span class="line">     address <span class="built_in">text</span>,</span><br><span class="line">     tax_class <span class="built_in">text</span>,</span><br><span class="line">     tax_rate <span class="built_in">text</span>,</span><br><span class="line">     emv <span class="built_in">Float</span>,</span><br><span class="line">     tbea <span class="built_in">Float</span>,</span><br><span class="line">     bav <span class="built_in">Float</span>,</span><br><span class="line">     tba <span class="built_in">text</span>,</span><br><span class="line">     property_tax <span class="built_in">text</span>,</span><br><span class="line">     condonumber <span class="built_in">text</span>,</span><br><span class="line">     condo <span class="built_in">text</span>,</span><br><span class="line">     insertion_date <span class="keyword">Time</span></span><br><span class="line"> ) <span class="keyword">SERVER</span> clickhouse_svr;</span></span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
 查询数据
-<img src="http://shwang.ink:4800/images/clickhouse-fdw-postgresql/clickhouse_fwd_query_results.png">
+<img src="./images/clickhouse_fwd_query_results.png" alt="clickhouse_fwd_query_results.png">
 </p>
 </div>
 </div>
-</div>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
+<p class="date">Date: 2020-08-13</p>
+<p class="date">Created: 2022-09-19 Mon 00:11</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+
     </div>
 
     
@@ -584,7 +538,7 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd7e29ae"><span class="nav-number">1.</span> <span class="nav-text">Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orga2a2c46"><span class="nav-number">1.1.</span> <span class="nav-text">编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orgd4470fa"><span class="nav-number">1.2.</span> <span class="nav-text">编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org13d7552"><span class="nav-number">2.</span> <span class="nav-text">配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org6eed4b1"><span class="nav-number">2.</span> <span class="nav-text">1 Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org2f7c743"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org8499aa0"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org7b31c57"><span class="nav-number">3.</span> <span class="nav-text">2 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -663,12 +617,12 @@ ENGINE = MergeTree PARTITION <span style="font-weight: bold;">BY</span> tax_clas
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">14k</span>
+    <span title="Symbols count total">11k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">12 mins.</span>
+    <span title="Reading time total">10 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

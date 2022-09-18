@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.machineheart.tech","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段为空的部分从 postgresq 中再回填给 pandas 的 dataframe 中。 合并">
+  <meta name="description" content="Table of Contents   1. 问题描述 2. 解决方案 3. 总结      1 问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python Pandas库如何优雅的与数据库交互">
 <meta property="og:url" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/index.html">
 <meta property="og:site_name" content="Shawn&#96;s Blog">
-<meta property="og:description" content="问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段为空的部分从 postgresq 中再回填给 pandas 的 dataframe 中。 合并">
+<meta property="og:description" content="Table of Contents   1. 问题描述 2. 解决方案 3. 总结      1 问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段">
 <meta property="og:image" content="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
 <meta property="article:published_time" content="2020-03-18T00:00:00.000Z">
 <meta property="article:modified_time" content="2020-06-06T06:46:43.367Z">
@@ -82,6 +82,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -235,7 +237,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3k</span>
+              <span>3.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -254,11 +256,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <div id="content">
+        <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge02849f">1. 问题描述</a></li>
+<li><a href="#orga2e841d">2. 解决方案</a></li>
+<li><a href="#org399fe2c">3. 总结</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-org293e52b" class="outline-2">
-<h2 id="org293e52b">问题描述</h2>
-<div class="outline-text-2" id="text-org293e52b">
+<div id="outline-container-orge02849f" class="outline-2">
+<h2 id="orge02849f"><span class="section-number-2">1</span> 问题描述</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
 </p>
@@ -287,9 +298,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgb09cbb6" class="outline-2">
-<h2 id="orgb09cbb6">解决方案</h2>
-<div class="outline-text-2" id="text-orgb09cbb6">
+<div id="outline-container-orga2e841d" class="outline-2">
+<h2 id="orga2e841d"><span class="section-number-2">2</span> 解决方案</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
 但是又不想用很重的库如 <code>sqlalchemy</code> 等支持 <code>ORM</code> 的库，觉得还是对程序员不友好。而且要写很多手脚架来适配。
@@ -300,8 +311,8 @@
 </p>
 
 
-<div class="figure">
-<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg">
+<div id="orge5fd9bc" class="figure">
+<p><img src="http://shwang.ink:4800/images/python-pandas-pgsql-interaction/records.jpg" alt="records.jpg">
 </p>
 </div>
 
@@ -310,21 +321,7 @@
 动态解析 <code>pandas dataframe</code> 对应的数据库临时表的 <code>schema</code> 
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">infer_pd_schema</span>(df):
-    <span style="font-style: italic;">'''infer pandas dataframe schema</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = []
-    <span style="font-weight: bold; font-style: italic;">type_map</span> = {
-        <span style="font-style: italic;">'int64'</span>: <span style="font-style: italic;">'int8'</span>,
-        <span style="font-style: italic;">'object'</span>: <span style="font-style: italic;">'varchar(512)'</span>,
-        <span style="font-style: italic;">'float64'</span>: <span style="font-style: italic;">'float8'</span>}
-
-    <span style="font-weight: bold;">for</span> col, tp <span style="font-weight: bold;">in</span> df.dtypes.items():
-        <span style="font-weight: bold; font-style: italic;">t</span> = type_map[tp.name]
-        <span style="font-weight: bold; font-style: italic;">item</span> = f<span style="font-style: italic;">'''"{col}"  {t}'''</span>
-        schema.append(item)
-    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">', '</span>.join(schema)
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_pd_schema</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="string">'''infer pandas dataframe schema</span><br><span class="line">    '''</span></span><br><span class="line">    schema = []</span><br><span class="line">    type_map = {</span><br><span class="line">	<span class="string">'int64'</span>: <span class="string">'int8'</span>,</span><br><span class="line">	<span class="string">'object'</span>: <span class="string">'varchar(512)'</span>,</span><br><span class="line">	<span class="string">'float64'</span>: <span class="string">'float8'</span>}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> col, tp <span class="keyword">in</span> df.dtypes.items():</span><br><span class="line">	t = type_map[tp.name]</span><br><span class="line">	item = f<span class="string">'''"{col}"  {t}'''</span></span><br><span class="line">	schema.append(item)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">', '</span>.join(schema)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -336,36 +333,7 @@
 上传 <code>pandas dataframe</code> 数据到数据库临时表
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">create_temp_table_with_df</span>(conn, table, dataframe):
-    <span style="font-style: italic;">'''conn is a pgsql connect transaction</span>
-<span style="font-style: italic;">    table is the name of the temp table and df is the pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">schema</span> = infer_pd_schema(dataframe)
-    conn.query(f<span style="font-style: italic;">'drop table if exists {table}'</span>)
-
-    <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''create TEMPORARY table if not exists {table}</span>
-<span style="font-style: italic;">    ({schema});'''</span>
-    logger.info(query)
-    conn.query(query)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">After testing, threads will not improve the uploading performance</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span>
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">600,000 records can be delivered within secs.</span>
-
-    <span style="font-weight: bold;">with</span> tempfile.NamedTemporaryFile() <span style="font-weight: bold;">as</span> tf:
-        <span style="font-weight: bold; font-style: italic;">name</span> = tf.name
-        logger.info(f<span style="font-style: italic;">'creating temp data file {name}'</span>)
-        dataframe.to_csv(name, header=<span style="font-weight: bold; text-decoration: underline;">True</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>)
-        <span style="font-weight: bold; font-style: italic;">query</span> = f<span style="font-style: italic;">'''</span>
-<span style="font-style: italic;">        copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span>
-<span style="font-style: italic;">        '''</span>
-        <span style="font-weight: bold; font-style: italic;">rconn</span> = conn._conn.connection
-        <span style="font-weight: bold; font-style: italic;">cursor</span> = rconn.cursor()
-        <span style="font-weight: bold;">with</span> <span style="font-weight: bold;">open</span>(name, <span style="font-style: italic;">'r'</span>) <span style="font-weight: bold;">as</span> f:
-            cursor.copy_expert(query, f)
-        rconn.commit()
-    logger.info(<span style="font-style: italic;">'upload data done'</span>)
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_temp_table_with_df</span><span class="params">(conn, table, dataframe)</span>:</span></span><br><span class="line">    <span class="string">'''conn is a pgsql connect transaction</span><br><span class="line">    table is the name of the temp table and df is the pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    schema = infer_pd_schema(dataframe)</span><br><span class="line">    conn.query(f<span class="string">'drop table if exists {table}'</span>)</span><br><span class="line"></span><br><span class="line">    query = f<span class="string">'''create TEMPORARY table if not exists {table}</span><br><span class="line">    ({schema});'''</span></span><br><span class="line">    logger.info(query)</span><br><span class="line">    conn.query(query)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># After testing, threads will not improve the uploading performance</span></span><br><span class="line">    <span class="comment"># here is a tricky way to upload a pandas dataframe to pgsql without "insert" query.</span></span><br><span class="line">    <span class="comment"># 600,000 records can be delivered within secs.</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tempfile.NamedTemporaryFile() <span class="keyword">as</span> tf:</span><br><span class="line">	name = tf.name</span><br><span class="line">	logger.info(f<span class="string">'creating temp data file {name}'</span>)</span><br><span class="line">	dataframe.to_csv(name, header=<span class="keyword">True</span>, index=<span class="keyword">False</span>)</span><br><span class="line">	query = f<span class="string">'''</span><br><span class="line">	copy {table} from STDIN WITH (FORMAT CSV, HEADER TRUE)</span><br><span class="line">	'''</span></span><br><span class="line">	rconn = conn._conn.connection</span><br><span class="line">	cursor = rconn.cursor()</span><br><span class="line">	<span class="keyword">with</span> open(name, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">	    cursor.copy_expert(query, f)</span><br><span class="line">	rconn.commit()</span><br><span class="line">    logger.info(<span class="string">'upload data done'</span>)</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -377,29 +345,7 @@
 对 <code>pandas dataframe</code> 的临时表与数据库中已经有的表做联合操作
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">query_pg_with_df</span>(table, dataframe, sql):
-    <span style="font-style: italic;">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span>
-<span style="font-style: italic;">    return a pandas dataframe</span>
-<span style="font-style: italic;">    '''</span>
-    <span style="font-weight: bold; font-style: italic;">pgdb</span> = records.Database(
-        <span style="font-style: italic;">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.<span style="font-weight: bold;">format</span>(
-            host=PG_SQL_HOST,
-            db=PG_SQL_NAME,
-            user=PG_SQL_USER,
-            pwd=PG_SQL_PASS)
-    )
-
-    <span style="font-weight: bold;">try</span>:
-        <span style="font-weight: bold;">with</span> pgdb.transaction() <span style="font-weight: bold;">as</span> conn:
-            create_temp_table_with_df(conn, table, dataframe)
-            logger.info(sql)
-            <span style="font-weight: bold; font-style: italic;">res</span> = conn.query(sql)
-            <span style="font-weight: bold;">return</span> pd.DataFrame(res.as_dict())
-    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">Exception</span> <span style="font-weight: bold;">as</span> e:
-        logger.error(e.msg)
-    <span style="font-weight: bold;">finally</span>:
-        pgdb.close()
-</pre>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_pg_with_df</span><span class="params">(table, dataframe, sql)</span>:</span></span><br><span class="line">    <span class="string">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span><br><span class="line">    return a pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    pgdb = records.Database(</span><br><span class="line">	<span class="string">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.format(</span><br><span class="line">	    host=PG_SQL_HOST,</span><br><span class="line">	    db=PG_SQL_NAME,</span><br><span class="line">	    user=PG_SQL_USER,</span><br><span class="line">	    pwd=PG_SQL_PASS)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">with</span> pgdb.transaction() <span class="keyword">as</span> conn:</span><br><span class="line">	    create_temp_table_with_df(conn, table, dataframe)</span><br><span class="line">	    logger.info(sql)</span><br><span class="line">	    res = conn.query(sql)</span><br><span class="line">	    <span class="keyword">return</span> pd.DataFrame(res.as_dict())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">	logger.error(e.msg)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">	pgdb.close()</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -410,9 +356,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgd70de58" class="outline-2">
-<h2 id="orgd70de58">总结</h2>
-<div class="outline-text-2" id="text-orgd70de58">
+<div id="outline-container-org399fe2c" class="outline-2">
+<h2 id="org399fe2c"><span class="section-number-2">3</span> 总结</h2>
+<div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
 <li>提供了 <code>pandas dataframe</code> 如何与 <code>pgsql</code> 里的表做交互比如 <code>join</code> 等操作。</li>
@@ -420,26 +366,11 @@
 </ul>
 </div>
 </div>
-</div>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
+<p class="date">Date: 2020-03-18</p>
+<p class="date">Created: 2022-09-19 Mon 00:09</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+
     </div>
 
     
@@ -543,7 +474,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#org293e52b"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgb09cbb6"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd70de58"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orge02849f"><span class="nav-number">2.</span> <span class="nav-text">1 问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orga2e841d"><span class="nav-number">3.</span> <span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org399fe2c"><span class="nav-number">4.</span> <span class="nav-text">3 总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -622,12 +553,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">14k</span>
+    <span title="Symbols count total">11k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">12 mins.</span>
+    <span title="Reading time total">10 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>

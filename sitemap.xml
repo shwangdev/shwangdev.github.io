@@ -4,43 +4,157 @@
   <url>
     <loc>https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/</loc>
     
-    <lastmod>2020-08-13T12:56:13.565Z</lastmod>
+    <lastmod>2022-09-18</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/</loc>
     
-    <lastmod>2020-06-06T06:46:43.367Z</lastmod>
+    <lastmod>2020-06-06</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/</loc>
     
-    <lastmod>2020-06-06T06:46:06.887Z</lastmod>
+    <lastmod>2020-06-06</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/about/index.html</loc>
     
-    <lastmod>2020-03-16T15:17:12.998Z</lastmod>
+    <lastmod>2020-03-16</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/categories/index.html</loc>
     
-    <lastmod>2020-03-15T15:04:51.199Z</lastmod>
+    <lastmod>2020-03-15</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/index.html</loc>
     
-    <lastmod>2020-03-15T15:04:38.649Z</lastmod>
+    <lastmod>2020-03-15</lastmod>
     
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://blog.machineheart.tech/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/clickhouse/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/pgsql/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/postfix/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/dovecot/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/mail/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/python/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/pandas/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/hive/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/tags/presto/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://blog.machineheart.tech/categories/bigdata/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/categories/linux/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/categories/programming/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.machineheart.tech/categories/programming/bigdata/</loc>
+    <lastmod>2022-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
   </url>
   
 </urlset>
