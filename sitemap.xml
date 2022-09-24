@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/</loc>
+    <loc>https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/</loc>
     
     <lastmod>2022-09-18</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://blog.machineheart.tech/2020/03/15/postfix-dovecot-config/</loc>
+    <loc>https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/</loc>
     
     <lastmod>2022-09-18</lastmod>
     
@@ -29,9 +29,18 @@
   </url>
   
   <url>
+    <loc>https://blog.machineheart.tech/tags/index.html</loc>
+    
+    <lastmod>2022-09-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.machineheart.tech/about/index.html</loc>
     
-    <lastmod>2020-03-16</lastmod>
+    <lastmod>2022-09-18</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -40,16 +49,7 @@
   <url>
     <loc>https://blog.machineheart.tech/categories/index.html</loc>
     
-    <lastmod>2020-03-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.machineheart.tech/tags/index.html</loc>
-    
-    <lastmod>2020-03-15</lastmod>
+    <lastmod>2022-09-18</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

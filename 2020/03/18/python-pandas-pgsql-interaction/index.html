@@ -28,7 +28,7 @@
 <meta property="og:description" content="Table of Contents   1. 问题描述 2. 解决方案 3. 总结      1 问题描述   最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：   从 google bigquery 大叔据平台将计算和聚合过的每小时结果集存在 pandas 的 dataframe 中。 pandas 的数据与 postgresql 数据库同步, 将结果集中有些字段">
 <meta property="og:image" content="https://blog.machineheart.tech/2020/03/18/python-pandas-pgsql-interaction/images/records.jpg">
 <meta property="article:published_time" content="2020-03-18T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-09-18T16:26:59.653Z">
+<meta property="article:modified_time" content="2022-09-18T16:35:04.591Z">
 <meta property="article:author" content="Shawn Wang">
 <meta property="article:tag" content="pgsql">
 <meta property="article:tag" content="python">
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-19 00:26:59" itemprop="dateModified" datetime="2022-09-19T00:26:59+08:00">2022-09-19</time>
+                <time title="Modified: 2022-09-19 00:35:04" itemprop="dateModified" datetime="2022-09-19T00:35:04+08:00">2022-09-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,15 +260,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd6ce3ae">1. 问题描述</a></li>
-<li><a href="#org2369106">2. 解决方案</a></li>
-<li><a href="#org0e1424c">3. 总结</a></li>
+<li><a href="#orgaff8e00">1. 问题描述</a></li>
+<li><a href="#org8b4a419">2. 解决方案</a></li>
+<li><a href="#orge84be31">3. 总结</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd6ce3ae" class="outline-2">
-<h2 id="orgd6ce3ae"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-orgaff8e00" class="outline-2">
+<h2 id="orgaff8e00"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近在做项目的时候遇到稍微复杂的一个场景,需要夸多组件数据处理。具体流程如下：
@@ -298,8 +298,8 @@
 </div>
 </div>
 
-<div id="outline-container-org2369106" class="outline-2">
-<h2 id="org2369106"><span class="section-number-2">2</span> 解决方案</h2>
+<div id="outline-container-org8b4a419" class="outline-2">
+<h2 id="org8b4a419"><span class="section-number-2">2</span> 解决方案</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 虽然 <code>pandas</code> 自己也带了数据库连接的接口，但是过于简单，不能满足复杂的处理过程。
@@ -311,7 +311,7 @@
 </p>
 
 
-<div id="orgbd8a79e" class="figure">
+<div class="figure">
 <p><img src="./images/records.jpg" alt="records.jpg">
 </p>
 </div>
@@ -345,7 +345,7 @@
 对 <code>pandas dataframe</code> 的临时表与数据库中已经有的表做联合操作
 </p>
 <div class="org-src-container">
-<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_pg_with_df</span><span class="params">(table, dataframe, sql)</span>:</span></span><br><span class="line">    <span class="string">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span><br><span class="line">    return a pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    pgdb = records.Database(</span><br><span class="line">	<span class="string">'postgres://{host}/{db}?user={user}&amp;password={pwd}'</span>.format(</span><br><span class="line">	    host=PG_SQL_HOST,</span><br><span class="line">	    db=PG_SQL_NAME,</span><br><span class="line">	    user=PG_SQL_USER,</span><br><span class="line">	    pwd=PG_SQL_PASS)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">with</span> pgdb.transaction() <span class="keyword">as</span> conn:</span><br><span class="line">	    create_temp_table_with_df(conn, table, dataframe)</span><br><span class="line">	    logger.info(sql)</span><br><span class="line">	    res = conn.query(sql)</span><br><span class="line">	    <span class="keyword">return</span> pd.DataFrame(res.as_dict())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">	logger.error(e.msg)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">	pgdb.close()</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_pg_with_df</span><span class="params">(table, dataframe, sql)</span>:</span></span><br><span class="line">    <span class="string">'''Temp upload pandas dataframe to pgsql for interaction with tables in pg.</span><br><span class="line">    return a pandas dataframe</span><br><span class="line">    '''</span></span><br><span class="line">    pgdb = records.Database(</span><br><span class="line">	<span class="string">'postgres://{host}/{db}?user={user}&amp;amp;password={pwd}'</span>.format(</span><br><span class="line">	    host=PG_SQL_HOST,</span><br><span class="line">	    db=PG_SQL_NAME,</span><br><span class="line">	    user=PG_SQL_USER,</span><br><span class="line">	    pwd=PG_SQL_PASS)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">with</span> pgdb.transaction() <span class="keyword">as</span> conn:</span><br><span class="line">	    create_temp_table_with_df(conn, table, dataframe)</span><br><span class="line">	    logger.info(sql)</span><br><span class="line">	    res = conn.query(sql)</span><br><span class="line">	    <span class="keyword">return</span> pd.DataFrame(res.as_dict())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">	logger.error(e.msg)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">	pgdb.close()</span><br></pre></td></tr></tbody></table></figure>
 </div>
 
 <p>
@@ -356,8 +356,8 @@
 </div>
 </div>
 
-<div id="outline-container-org0e1424c" class="outline-2">
-<h2 id="org0e1424c"><span class="section-number-2">3</span> 总结</h2>
+<div id="outline-container-orge84be31" class="outline-2">
+<h2 id="orge84be31"><span class="section-number-2">3</span> 总结</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>如果采用 <code>sql insert</code> 一条条纪录的话，性能不能符合要求，所以采用了 <code>copy csv</code> 的方式。</li>
@@ -368,8 +368,9 @@
 </div>
 
 <p class="date">Date: 2020-03-18</p>
-<p class="date">Created: 2022-09-19 Mon 00:27</p>
-<p class="validation"><a href="https://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
+<p class="author">Author: shawn-win11</p>
+<p class="date">Created: 2022-09-24 Sat 14:46</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 
     </div>
 
@@ -474,7 +475,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgd6ce3ae"><span class="nav-number">2.</span> <span class="nav-text">1 问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org2369106"><span class="nav-number">3.</span> <span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org0e1424c"><span class="nav-number">4.</span> <span class="nav-text">3 总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgaff8e00"><span class="nav-number">2.</span> <span class="nav-text">1 问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org8b4a419"><span class="nav-number">3.</span> <span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orge84be31"><span class="nav-number">4.</span> <span class="nav-text">3 总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -553,12 +554,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">11k</span>
+    <span title="Symbols count total">14k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">10 mins.</span>
+    <span title="Reading time total">13 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
