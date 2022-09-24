@@ -28,7 +28,7 @@
 <meta property="og:description" content="Table of Contents   1. Conda环境下搭建Clickhouse-fdw  1.1. 编译clickhouse-odbc 1.2. 编译clickhouse-fdw   2. 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse       1 Conda环境下搭建Clickhouse-fdw   由于 Clickhouse-fdw">
 <meta property="og:image" content="https://blog.machineheart.tech/2020/08/13/clickhouse-fdw-postgresql/images/clickhouse_fwd_query_results.png">
 <meta property="article:published_time" content="2020-08-13T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-09-18T16:35:04.465Z">
+<meta property="article:modified_time" content="2022-09-24T07:02:09.750Z">
 <meta property="article:author" content="Shawn Wang">
 <meta property="article:tag" content="clickhouse">
 <meta property="article:tag" content="pgsql">
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-19 00:35:04" itemprop="dateModified" datetime="2022-09-19T00:35:04+08:00">2022-09-19</time>
+                <time title="Modified: 2022-09-24 15:02:09" itemprop="dateModified" datetime="2022-09-24T15:02:09+08:00">2022-09-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,14 +230,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.4k</span>
+              <span>3.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -253,20 +253,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfce1fde">1. Conda环境下搭建Clickhouse-fdw</a>
+<li><a href="#orgde71c4e">1. Conda环境下搭建Clickhouse-fdw</a>
 <ul>
-<li><a href="#orgb299e9b">1.1. 编译clickhouse-odbc</a></li>
-<li><a href="#org34937d7">1.2. 编译clickhouse-fdw</a></li>
+<li><a href="#org0b2e093">1.1. 编译clickhouse-odbc</a></li>
+<li><a href="#org0d17d32">1.2. 编译clickhouse-fdw</a></li>
 </ul>
 </li>
-<li><a href="#org652f537">2. 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></a></li>
+<li><a href="#org5b9955d">2. 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orgfce1fde" class="outline-2">
-<h2 id="orgfce1fde"><span class="section-number-2">1</span> Conda环境下搭建Clickhouse-fdw</h2>
+<div id="outline-container-orgde71c4e" class="outline-2">
+<h2 id="orgde71c4e"><span class="section-number-2">1</span> Conda环境下搭建Clickhouse-fdw</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 由于 <code>Clickhouse-fdw</code> 依赖高版本的 <code>GNU tool chain</code> 需要使用 <code>GCC 7+</code> 来编译， 并且依赖的一些第三方库的版本也比较高，
@@ -281,8 +281,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgb299e9b" class="outline-3">
-<h3 id="orgb299e9b"><span class="section-number-3">1.1</span> 编译clickhouse-odbc</h3>
+<div id="outline-container-org0b2e093" class="outline-3">
+<h3 id="org0b2e093"><span class="section-number-3">1.1</span> 编译clickhouse-odbc</h3>
 <div class="outline-text-3" id="text-1-1">
 <ol class="org-ol">
 <li><p>
@@ -321,8 +321,8 @@
 </div>
 </div>
 
-<div id="outline-container-org34937d7" class="outline-3">
-<h3 id="org34937d7"><span class="section-number-3">1.2</span> 编译clickhouse-fdw</h3>
+<div id="outline-container-org0d17d32" class="outline-3">
+<h3 id="org0d17d32"><span class="section-number-3">1.2</span> 编译clickhouse-fdw</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <code>clickhouse-fdw</code> 依赖 <code>postgresql-dev</code> 的包，所以还是要先 <code>yum postgresql-dev</code> 相关的依赖，然后再用 <code>Conda</code> 安装 <code>postgresql 11</code> 的版本。
@@ -344,26 +344,17 @@ make -f lib/Makefile
 make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 g++ -Wall -Wpointer-arith -O2 -fPIC -O0 -g3 -Wno-unused-variable -fPIC -Wall -I. -Ilib   -c -o lib/clickhouse-client.o lib/clickhouse-client.cpp
 g++ -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -pipe -I/home/ec2-user/miniconda3/envs/py3/include -fdebug-prefix-map==/usr/local/src/conda/- -fdebug-prefix-map==/usr/local/src/conda-prefix -fPIC lib/clickhouse-client.o -o libclickhouse-1.0.so -L/home/ec2-user/miniconda3/envs/py3/lib -L. -lclickhouse-1.0 -lodbc -lodbcinst -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,-rpath,/home/ec2-user/miniconda3/envs/py3/lib -L/home/ec2-user/miniconda3/envs/py3/lib  -L/home/ec2-user/miniconda3/envs/py3/lib -Wl,--as-needed -Wl,-rpath,'/home/ec2-user/miniconda3/envs/py3/lib',--disable-new-dtags -fPIC -shared -ldl -lstdc++ -L -lodbc
-make[1]: 放弃循环依赖 test &lt;- test 。
-g++ -O0 -g3 -Wno-unused-variable -Iinclude  lib/example/odbc_test.o -o test -ldl -L. -lclickhouse-1.0 -lodbc -lodbcinst
-make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
-make -f lib/Makefile
-make[1]: 进入目录“/home/ec2-user/workspaces/clickhousedb_fdw”
-make[1]: 放弃循环依赖 test &lt;- test 。
-make[1]: 对“all”无需做任何事。
-make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
-/usr/bin/install -c -m 755 libclickhouse-1.0.so /home/ec2-user/miniconda3/envs/py3/lib/libclickhouse-1.0.so
-</pre>
+make[1]: 放弃循环依赖 test &lt;- 755 test 。 g++ -o0 -g3 -wno-unused-variable -iinclude lib example odbc_test.o -o -ldl -l. -lclickhouse-1.0 -lodbc -lodbcinst make[1]: 离开目录“ home ec2-user workspaces clickhousedb_fdw” make -f makefile 进入目录“ 放弃循环依赖 &lt;- 对“all”无需做任何事。 usr bin install -c -m libclickhouse-1.0.so miniconda3 envs py3 &lt; pre&gt;
 <p>
 最后运行 <code>make USE_PGXS=1 install</code> 把对应的动态库放到制定位置。
 </p>
-</div>
+<!-----></pre></div>
 </div>
 </div>
 
 
-<div id="outline-container-org652f537" class="outline-2">
-<h2 id="org652f537"><span class="section-number-2">2</span> 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
+<div id="outline-container-org5b9955d" class="outline-2">
+<h2 id="org5b9955d"><span class="section-number-2">2</span> 配置 <code>postgresql</code> 和 <code>clickhousedb-fdw</code> 连接 <code>Clickhouse</code></h2>
 <div class="outline-text-2" id="text-2">
 <p>
 先配置 <code>clickhouse</code> 表并导入数据
@@ -439,7 +430,7 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 
 <p class="date">Date: 2020-08-13</p>
 <p class="author">Author: shawn-win11</p>
-<p class="date">Created: 2022-09-24 Sat 14:46</p>
+<p class="date">Created: 2022-09-24 Sat 15:03</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer" target="_blank" rel="noopener">Validate</a></p>
 
     </div>
@@ -539,7 +530,7 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgfce1fde"><span class="nav-number">2.</span> <span class="nav-text">1 Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orgb299e9b"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org34937d7"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org652f537"><span class="nav-number">3.</span> <span class="nav-text">2 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orgde71c4e"><span class="nav-number">2.</span> <span class="nav-text">1 Conda环境下搭建Clickhouse-fdw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#org0b2e093"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 编译clickhouse-odbc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#org0d17d32"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 编译clickhouse-fdw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#org5b9955d"><span class="nav-number">3.</span> <span class="nav-text">2 配置 postgresql 和 clickhousedb-fdw 连接 Clickhouse</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -618,12 +609,12 @@ make[1]: 离开目录“/home/ec2-user/workspaces/clickhousedb_fdw”
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">14k</span>
+    <span title="Symbols count total">12k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">13 mins.</span>
+    <span title="Reading time total">11 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
