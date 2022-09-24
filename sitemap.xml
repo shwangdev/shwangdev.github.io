@@ -58,7 +58,7 @@
 
   <url>
     <loc>https://blog.machineheart.tech/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -66,63 +66,63 @@
   
   <url>
     <loc>https://blog.machineheart.tech/tags/clickhouse/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/pgsql/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/postfix/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/dovecot/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/mail/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/python/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/pandas/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/hive/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/tags/presto/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -131,28 +131,28 @@
   
   <url>
     <loc>https://blog.machineheart.tech/categories/bigdata/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/categories/linux/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/categories/programming/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.machineheart.tech/categories/programming/bigdata/</loc>
-    <lastmod>2022-09-18</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
